@@ -1,0 +1,35 @@
+name: sn58.tk frontend production
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [closed]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Prepare env variales
+      run: |
+        echo "ARTIFACT_NAME=front_$(date +'%Y-%m-%d')-git.zip" >> $GITHUB_ENV
+        echo $ARTIFACT_NAME
+    - name: Yarn
+      uses: c-hive/gha-yarn-cache@v1
+    - run: yarn install
+    - run: |
+        NODE_ENV=production
+        yarn build
+    - run: |
+        cd ./docs
+        zip -r ../${{ env.ARTIFACT_NAME }} *
+        cd ../
+    - run: curl -T ${{ env.ARTIFACT_NAME }} -u deploy@sn58.tk:${{ secrets.FTP_PSW }} ftp://deploy@sn58.tk/deploy/
+    - run: curl -i -X GET https://sn58.tk/unzip.php?name=${{ env.ARTIFACT_NAME }}
