@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import {
   getAuthLink,
-  getAuthTokenAsync,
-  setAuthTokenByCodeAsync,
-  getUser, unAuthorizeAsync
+  unAuthorizeAsync
 } from './services/authService';
 import MainScreen from "./components/MainScreen";
 
@@ -20,7 +18,6 @@ interface IUser {
 
 function App() {
   const [userData, setUserData] = useState<IUser | null | undefined>(null);
-  const [dbLoading, setDbLoading] = useState(true);
   const [err, setErr] = useState('');
 
   useEffect(() => {
@@ -63,7 +60,7 @@ function App() {
         {err && <p>{err}</p>}
         <div style={{textAlign:'left', lineHeight: '15px', padding: '8px'}}>
           <button  style={{float:'right'}} onClick={() => unAuthorizeAsync()}>Выйти</button>
-          <img src={userData.photo} style={{float:'left'}} width={40} />
+          <img src={userData.photo} alt={userData.name} style={{float:'left'}} width={40} />
           <div>{userData.name}<br />{userData.surname}</div>
         </div>
         <MainScreen />
