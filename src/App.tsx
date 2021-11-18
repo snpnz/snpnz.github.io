@@ -48,7 +48,7 @@ function App() {
   }, []);
 
   if (userData === null) {
-    return <div>Loading...</div>;
+    return <div>Loading...<QRScanner onChange={e => alert(e)} /></div>;
   }
 
   if (userData === undefined) {
