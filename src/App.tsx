@@ -8,6 +8,7 @@ import {
 } from './services/authService';
 import QRScanner from "./components/QRScanner";
 import {log} from "util";
+import MainScreen from "./components/MainScreen";
 
 interface IUser {
   "id": string;
@@ -48,7 +49,7 @@ function App() {
   }, []);
 
   if (userData === null) {
-    return <div>Loading...<QRScanner onChange={e => alert(e)} /></div>;
+    return <div>Loading...</div>;
   }
 
   if (userData === undefined) {
@@ -67,8 +68,7 @@ function App() {
           <img src={userData.photo} style={{float:'left'}} width={40} />
           <div>{userData.name}<br />{userData.surname}</div>
         </div>
-        Ололо
-        <QRScanner onChange={e => console.log(e)} />
+        <MainScreen />
       </div>
   );
 }
