@@ -6,8 +6,6 @@ import {
   setAuthTokenByCodeAsync,
   getUser, unAuthorizeAsync
 } from './services/authService';
-import QRScanner from "./components/QRScanner";
-import {log} from "util";
 import MainScreen from "./components/MainScreen";
 
 interface IUser {
