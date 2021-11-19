@@ -62,6 +62,12 @@ const CheckPointByCode: React.FC<IQRScannerProps> = ({ code, points, onSave }) =
 
 * */
 
+    const distPoints = points
+        .map((x: IPoint) => ({...x, dist: getDistanceBetweenPointsInMeters([x.point[0], x.point[1]], [lat, lng])}))
+        .sort(function(a,b) {
+            return a.dist - b.dist;
+        });
+
     const handleSubmit = (e: { preventDefault: () => void; }) => {
       e.preventDefault();
       post('/api/points_report/', {
@@ -72,13 +78,22 @@ const CheckPointByCode: React.FC<IQRScannerProps> = ({ code, points, onSave }) =
       }).then(res => {
           console.log(res);
           onSave();
+          window.navigator.vibrate(200);
       })
     }
     return <div className={style.qrScanner}>
         <p>{status}</p>
         <b>До точки: {formatDistance(dist)}</b>
-        <h3><a href={`geo:${lat},${lng}`}>{point.name}</a></h3>
+        <h3><a href={`geo:${point.point.join(',')}`}>{point.name}</a></h3>
         <em>{point.description}</em>
+        <p><small>Ближайшие: {
+            distPoints.slice(0, 3).map((x, i, a) => {
+                return <>
+                <a href={`geo:${x.point.join(',')}`}>{x.name} - {formatDistance(x.dist)}</a>
+                {i < a.length - 1 && ", "}
+                </>
+            })
+        }</small></p>
         <hr />
         <form onSubmit={handleSubmit}>
             <textarea className={style.comment} rows={3} placeholder="Комментарий" ref={commentRef} />

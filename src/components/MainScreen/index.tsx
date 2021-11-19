@@ -70,6 +70,7 @@ const MainScreen: React.FC = () => {
             const params = new URLSearchParams(search[1]);
             const token = params.get("code");
             setCode(token);
+            window.navigator.vibrate(200);
             return;
         }
         setCode(co);
@@ -97,6 +98,7 @@ const MainScreen: React.FC = () => {
             setCode(null);
             setScan(false);
             setActualKey(new Date().toLocaleString())
+            window.navigator.vibrate(200);
         }} />}
     </div>
 }
