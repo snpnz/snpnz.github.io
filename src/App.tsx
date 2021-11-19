@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import {
-  getAuthLink,
-  unAuthorizeAsync
+  getAuthLink
 } from './services/authService';
 import MainScreen from "./components/MainScreen";
+import {get} from "./helpers/httpClient";
 
 interface IUser {
   "id": string;
@@ -22,12 +22,21 @@ function App() {
 
   useEffect(() => {
 
-    const get = async () => {
+    const params = new URLSearchParams(document.location.search.substring(1));
+    const token = params.get("token");
+    const id = params.get("id");
+    const expiration = params.get("expiration");
+
+    if (token && id && expiration) {
+      localStorage.setItem('snpzn-auth', JSON.stringify({ token, id, expiration }));
+      window.location.href = "/";
+      return;
+    }
+
+
+    const getd = async () => {
       try {
-        const rawUserData = await fetch(
-            '/api/user/',
-            { credentials: 'include'});
-        const userData = await rawUserData.json();
+        const userData = await get('/api/user/');
         if (userData.success === false) {
           setUserData(undefined);
         } else {
@@ -38,7 +47,7 @@ function App() {
         setErr((e as Error).message);
       }
     }
-    get().then();
+    getd().then();
 
 
   }, []);
@@ -59,7 +68,7 @@ function App() {
       <div className="App">
         {err && <p>{err}</p>}
         <div style={{textAlign:'left', lineHeight: '15px', padding: '8px'}}>
-          <button  style={{float:'right'}} onClick={() => unAuthorizeAsync()}>Выйти</button>
+          <button  style={{float:'right'}} onClick={() => { window.localStorage.clear(); window.location.href = "/"; }}>Выйти</button>
           <img src={userData.photo} alt={userData.name} style={{float:'left'}} width={40} />
           <div>{userData.name}<br />{userData.surname}</div>
         </div>

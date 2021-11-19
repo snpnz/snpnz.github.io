@@ -29,3 +29,12 @@
   align-items: center;
   justify-content: center;
 }
+
+.comment {
+  display: block;
+  box-sizing: border-box;
+  width: calc(100% - 40px);
+  margin: 20px;
+  padding: 20px;
+  border-radius: 4px;
+}
