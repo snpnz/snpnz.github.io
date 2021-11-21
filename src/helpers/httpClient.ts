@@ -41,7 +41,7 @@ export function get(url: string, data: { [key: string]: string } | null = null, 
  * @param opts
  * @returns {Promise<any>}
  */
-export function post(url: string, data?: { [key: string]: string }, opts = {}) {
+export function post<T>(url: string, data?: { [key: string]: string } | T, opts = {}) {
     const fullUrl = url;
     let body;
     if (data) {

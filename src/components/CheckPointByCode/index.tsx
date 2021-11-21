@@ -1,10 +1,10 @@
 import React from 'react';
 import style from './style.module.css';
-import {IPoint} from "../MainScreen";
 import {getDistanceBetweenPointsInMeters} from "../../helpers/distanceHelper";
 import { formatDistance } from '../../helpers/formatHelper';
 import {post} from "../../helpers/httpClient";
 import {getSQLDate} from "../../helpers/dateHelper";
+import {IPoint} from "../../types";
 interface IQRScannerProps {
     code: string | null,
     points: IPoint[],
