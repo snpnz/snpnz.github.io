@@ -4,7 +4,7 @@ import AppWelcome from "../AppWelcome";
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {AppBar, Button, Toolbar, Typography, Container, Fab} from "@mui/material";
+import {AppBar, Toolbar, Typography, Container, Fab} from "@mui/material";
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';

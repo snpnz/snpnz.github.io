@@ -26,13 +26,13 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
         dispatch(updateUserDataAction());
 
-    }, []);
+    }, [dispatch]);
 
     React.useEffect(() => {
         if (user) {
             navigate('/');
         }
-    }, [user]);
+    }, [user, navigate]);
 
 
 

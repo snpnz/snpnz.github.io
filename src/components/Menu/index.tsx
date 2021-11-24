@@ -17,7 +17,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import {Link} from "react-router-dom";
 import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
 import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
-import {Avatar, Button, Typography, TypographyVariant} from '@mui/material';
+import {Avatar, Button, Typography} from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import {lsRemove} from "../../helpers/localStorageHelper";
 import {LsKey} from "../../types/lsKeys.enum";

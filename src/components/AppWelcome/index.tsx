@@ -2,11 +2,11 @@ import React, {HTMLAttributes} from 'react';
 import clsx from 'clsx';
 import styles from './style.module.css';
 import Screen from "../Screen";
-import {IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Paper, Typography} from '@mui/material';
+import {IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Typography} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import CloudIcon from '@mui/icons-material/Cloud';
-import CloudOffIcon from '@mui/icons-material/CloudOff';
+// import CloudOffIcon from '@mui/icons-material/CloudOff';
 import CachedIcon from '@mui/icons-material/Cached';
 
 
