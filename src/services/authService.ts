@@ -6,7 +6,7 @@ const lsUserKey = 'snpnz_user';
 export function getAuthLink() {
     const data = {
         client_id,
-        redirect_uri: window.location.origin + '/oauth/?redir='+window.location.origin,
+        redirect_uri: window.location.origin + '/oauth/?redir='+window.location.origin+'/login',
         response_type: 'code',
         approval_prompt : 'auto',
         scope: 'activity:read',

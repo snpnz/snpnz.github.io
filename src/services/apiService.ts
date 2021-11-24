@@ -1,6 +1,6 @@
 import {get, post} from "../helpers/httpClient";
-import {mapBackPointReportToFront, mapBackPointToFront} from "../mappers/apiMapper";
-import {IAddPointReportRequest, IPoint, IPointReport} from "../types";
+import {mapBackPointReportToFront, mapBackPointToFront, mapBackUserToFront} from "../mappers/apiMapper";
+import {IAddPointReportRequest, IPoint, IPointReport, IUser} from "../types";
 
 export const getRemotePoints = async (): Promise<IPoint[]> => {
     const { data } = await get('/api/points/');
@@ -16,3 +16,9 @@ export const addPointReport = async (request: IAddPointReportRequest): Promise<I
     const { data } = await post('/api/points_report/', request);
     return data.map(mapBackPointReportToFront);
 }
+
+export const updateUserData = async (): Promise<IUser> => {
+    const { data } = await get('/api/user/');
+    return mapBackUserToFront(data);
+}
+

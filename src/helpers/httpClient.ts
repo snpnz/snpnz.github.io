@@ -1,8 +1,11 @@
+import {lsGet} from "./localStorageHelper";
+import {LsKey} from "../types/lsKeys.enum";
+
 const options = {
     headers: {
         Accept: 'application/json',
         'cache-control': 'no-cache',
-        Authorization: localStorage.getItem('snpzn-auth'),
+        Authorization: JSON.stringify(lsGet(LsKey.AuthData)),
     },
     credentials: 'include', // include, *same-origin, omit
     mode: 'cors'

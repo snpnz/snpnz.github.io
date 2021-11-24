@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IAddPointReportRequest, IPoint, IPointReport} from "../types";
-import {addPointReport, getRemotePoints, getRemotePointsReports} from "../services/apiService";
+import {IAddPointReportRequest, IPoint, IPointReport, IUser} from "../types";
+import {addPointReport, getRemotePoints, getRemotePointsReports, updateUserData} from "../services/apiService";
 import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
 
@@ -18,6 +18,10 @@ interface IMainState {
 
     isPointReportSaving: boolean;
     pointReportError: string;
+
+    isUserLoading: boolean;
+    userError: string;
+    user: IUser | null;
 }
 const  initialState: IMainState = {
     themeMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark":"light",
@@ -31,11 +35,15 @@ const  initialState: IMainState = {
     pointReportsLoadingError: '',
     isPointReportSaving: false,
     pointReportError: '',
+    isUserLoading: false,
+    userError: '',
+    user: lsGet<IUser>(LsKey.UserData) || null,
 }
 
 export const getRemotePointsAction = createAsyncThunk('sn58/getRemotePointsAction', getRemotePoints);
 export const getRemotePointReportsAction = createAsyncThunk('sn58/getRemotePointReportsAction', getRemotePointsReports);
 export const addPointReportAction = createAsyncThunk('sn58/addPointReportAction', addPointReport);
+export const updateUserDataAction = createAsyncThunk('sn58/updateUserDataAction', updateUserData);
 
 const mainSlice = createSlice({
     name: "sn58",
@@ -46,6 +54,9 @@ const mainSlice = createSlice({
         },
         setOnlineState: (state, action: PayloadAction<boolean>) => { //
             state.isOnline = action.payload;
+        },
+        setUser: (state, action: PayloadAction<IUser>) => { //
+            state.user = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -99,6 +110,20 @@ const mainSlice = createSlice({
         builder.addCase(addPointReportAction.fulfilled, (state, action) => {
             lsRemove(LsKey.SaveReport);
             state.isPointReportSaving = false;
+        })
+
+        builder.addCase(updateUserDataAction.pending, (state, action) => {
+            state.isUserLoading = true;
+        })
+        builder.addCase(updateUserDataAction.rejected, (state, action) => {
+            state.userError = 'Ошибка загрузки информации о пользователе';
+            state.isUserLoading = false;
+            lsRemove(LsKey.UserData);
+        })
+        builder.addCase(updateUserDataAction.fulfilled, (state, action) => {
+            lsSet<IUser>(LsKey.UserData, action.payload);
+            state.user = action.payload;
+            state.isUserLoading = false;
         })
     },
 });

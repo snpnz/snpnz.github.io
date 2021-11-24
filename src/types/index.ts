@@ -1,4 +1,4 @@
-export interface IUser {
+export interface IRawUser {
     "id": string;
     "login": string;
     "name": string;
@@ -32,4 +32,14 @@ export interface IAddPointReportRequest {
     coordinates: string;
     comment: string;
     created_at: string;
+}
+
+export interface IUser {
+    id: number;
+    login: string;
+    name: string;
+    surname: string;
+    photo: string;
+    stravaId: string;
+    registerDate: string;
 }

@@ -18,6 +18,7 @@ import {notifyWithState} from "../../helpers/notificationHelper";
 import AppCheckpoint from "../AppCheckpoint";
 import AppMy from "../AppMy";
 import AppList from "../AppList";
+import AppLogin from "../AppLogin";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -68,7 +69,6 @@ function App() {
                                     {!isUploadComplete && isOnline && <CloudUploadIcon />}
                                     {!isOnline && <CloudOffIcon />}
                                 </IconButton>
-                                <Button component={Link} to="/about" color="inherit">Войти</Button>
                             </Toolbar>
                         </AppBar>
                     </Box>
@@ -85,6 +85,7 @@ function App() {
                                 <Route path="add" element={<AppCheckpoint />} />
                                 <Route path="my" element={<AppMy />} />
                                 <Route path="list" element={<AppList />} />
+                                <Route path="login" element={<AppLogin />} />
                             </Routes>
                         </Container>
                     </Box>

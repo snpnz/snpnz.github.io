@@ -17,11 +17,16 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import {Link} from "react-router-dom";
 import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
 import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
+import {Avatar, Button, Typography, TypographyVariant} from '@mui/material';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import {lsRemove} from "../../helpers/localStorageHelper";
+import {LsKey} from "../../types/lsKeys.enum";
+
 
 const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className }) => {
     const [o, sO] = React.useState(false);
     const dispatch = useAppDispatch();
-    const { themeMode } = useAppSelector(s => s.main);
+    const { themeMode, user } = useAppSelector(s => s.main);
     return <>
         <IconButton
             size="large"
@@ -44,6 +49,30 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                 onClick={() => sO(false)}
                 onKeyDown={() => sO(false)}
             >
+                <Box sx={{p:2, py: 3, display: 'flex'}}>
+                    {!user?.photo ? <Avatar
+                        sx={{ width: 56, height: 56 }}
+                    >
+                        <PersonOffIcon />
+                    </Avatar> : <Avatar
+                        src={user.photo}
+                        sx={{ width: 56, height: 56 }}
+                    />}
+                    <Box sx={{flexGrow: 1, ml: 2}}>
+                        {
+                            !user
+                            ? <Typography variant={"subtitle2"} color="warning">Неавторизованный пользователь</Typography>
+                            : <Typography variant={"subtitle2"} color="primary">{user.name} {user.surname}</Typography>
+                        }
+                        {!user && <Button sx={{ml:-1}} component={Link} to="/login" color="inherit">Войти</Button>}
+                        {user && <Button sx={{ml:-1}} onClick={() => {
+                            lsRemove(LsKey.AuthData);
+                            lsRemove(LsKey.UserData);
+                            window.location.reload();
+                        }} color="inherit">Выйти</Button>}
+                    </Box>
+                </Box>
+                <Divider />
                 <ListItem button component={Link} to={"/my"}>
                     <ListItemIcon>
                         <PlaylistAddCheckIcon />
