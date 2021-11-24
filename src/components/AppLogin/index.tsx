@@ -9,7 +9,7 @@ import {lsSet} from "../../helpers/localStorageHelper";
 import {LsKey} from "../../types/lsKeys.enum";
 
 const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
-    const { user } = useAppSelector(s => s.main);
+    const { user, isUserLoading, userError } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
