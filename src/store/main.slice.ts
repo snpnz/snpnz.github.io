@@ -82,7 +82,7 @@ const mainSlice = createSlice({
             }
         })
         builder.addCase(getRemotePointsAction.rejected, (state, action) => {
-            state.pointsLoadingError = 'Ошибка загрузки информации о точках';
+            state.pointsLoadingError = (action.payload as Error)?.message || 'Ошибка загрузки информации о точках';
             state.isPointsLoading = false;
         })
         builder.addCase(getRemotePointsAction.fulfilled, (state, action) => {
@@ -103,7 +103,7 @@ const mainSlice = createSlice({
             }
         })
         builder.addCase(getRemotePointReportsAction.rejected, (state, action) => {
-            state.pointReportsLoadingError = 'Ошибка загрузки информации о точках';
+            state.pointReportsLoadingError = (action.payload as Error)?.message || 'Ошибка загрузки информации о точках';
             state.isPointReportsLoading = false;
         })
         builder.addCase(getRemotePointReportsAction.fulfilled, (state, action) => {
@@ -118,14 +118,10 @@ const mainSlice = createSlice({
 
         builder.addCase(addPointReportAction.pending, (state, action) => {
             state.isPointReportSaving = true;
-            if (!state.isOnline) {
-                const already = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
-                lsSet<IAddPointReportRequest[]>(LsKey.SaveReport, [...already, action.payload!]);
-                state.pointReportError = 'Нет доступа к интернету';
-            }
+            state.isUploadComplete = false;
         })
         builder.addCase(addPointReportAction.rejected, (state, action) => {
-            state.pointsLoadingError = 'Ошибка загрузки информации о точках';
+            state.pointsLoadingError = action.error.message || 'Ошибка загрузки информации о точках';
             state.isPointReportSaving = false;
         })
         builder.addCase(addPointReportAction.fulfilled, (state, action) => {
@@ -137,7 +133,8 @@ const mainSlice = createSlice({
             state.isUploadLoading = true;
         })
         builder.addCase(addCachedPointReportAction.rejected, (state, action) => {
-            state.uploadError = (action?.payload as Error).message;
+            console.log(action.error.message)
+            state.uploadError = action.error.message || 'dfd';
             state.isUploadLoading = false;
             state.isUploadComplete = false;
         })
@@ -152,7 +149,7 @@ const mainSlice = createSlice({
             state.isUserLoading = true;
         })
         builder.addCase(updateUserDataAction.rejected, (state, action) => {
-            state.userError = 'Ошибка загрузки информации о пользователе';
+            state.userError = action.error.message || 'Ошибка загрузки информации о пользователе';
             state.isUserLoading = false;
             lsRemove(LsKey.UserData);
         })

@@ -1,7 +1,7 @@
 import {get, post} from "../helpers/httpClient";
 import {mapBackPointReportToFront, mapBackPointToFront, mapBackUserToFront} from "../mappers/apiMapper";
 import {IAddPointReportRequest, IPoint, IPointReport, IUser} from "../types";
-import {lsGet, lsRemove} from "../helpers/localStorageHelper";
+import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
 
 export const getRemotePoints = async (): Promise<IPoint[]> => {
@@ -15,6 +15,11 @@ export const getRemotePointsReports = async (): Promise<IPointReport[]> => {
 }
 
 export const addPointReport = async (request: IAddPointReportRequest): Promise<IPointReport[]> => {
+    if (!navigator.onLine) {
+        const already = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
+        lsSet<IAddPointReportRequest[]>(LsKey.SaveReport, [...already, request]);
+        return Promise.reject('Интернет недоступен');
+    }
     const { data } = await post('/api/points_report/', request);
     return data.map(mapBackPointReportToFront);
 }

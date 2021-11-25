@@ -1,11 +1,17 @@
 import React, {HTMLAttributes} from 'react';
-import {Alert, Box, List, ListItemButton, ListItemText, Typography, CircularProgress} from '@mui/material';
+import {Alert, Box, List, ListItemButton, ListItemText, Typography, CircularProgress, Avatar, ListItemAvatar} from '@mui/material';
 import {useAppDispatch, useAppSelector} from "../../store";
 import Button from "@mui/material/Button";
 import {getRemotePointReportsAction} from "../../store/main.slice";
+import {lsGet} from "../../helpers/localStorageHelper";
+import {IAddPointReportRequest} from "../../types";
+import {LsKey} from "../../types/lsKeys.enum";
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 
 const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
-    const { pointReports, isPointReportsLoading, pointReportsLoadingError } = useAppSelector(s => s.main);
+    const { pointReports, isPointReportsLoading, pointReportsLoadingError, isUploadComplete, points } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
 
     if (isPointReportsLoading) {
@@ -35,10 +41,34 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             Мои отметки на точках
         </Typography>
         <Box>
+            {
+                !isUploadComplete && <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {lsGet<IAddPointReportRequest[]>(LsKey.SaveReport)!.map(point => {
+                        return (
+                            <ListItemButton key={point.comment + point.created_at + point.id_point}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <HourglassTopIcon color="error" />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={points.find(p=>+p.id === +point.id_point)!.name}
+                                    secondary={point.created_at.toLocaleString() + ' (Ожидает выгрузки)' }
+                                />
+                            </ListItemButton>
+                        );
+                    })}
+                </List>
+            }
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {pointReports.map(point => {
                     return (
                         <ListItemButton key={point.id}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <LocationOnIcon />
+                                </Avatar>
+                            </ListItemAvatar>
                             <ListItemText primary={point.name} secondary={point.created_at.toLocaleString()} />
                         </ListItemButton>
                     );
