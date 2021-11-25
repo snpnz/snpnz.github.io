@@ -10,12 +10,13 @@ import {useAppDispatch, useAppSelector} from "../../store";
 import {lsGet} from "../../helpers/localStorageHelper";
 import {ILocalUpdatesHistory} from "../../types";
 import {LsKey} from "../../types/lsKeys.enum";
-import {getRemotePointReportsAction, getRemotePointsAction} from "../../store/main.slice";
+import {addCachedPointReportAction, getRemotePointReportsAction, getRemotePointsAction} from "../../store/main.slice";
 import {Link} from "react-router-dom";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 
 const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
-    const { isPointsLoading, isPointReportsLoading, user, isOnline } = useAppSelector(s => s.main);
+    const { isPointsLoading, isPointReportsLoading, user, isOnline, isUploadComplete, isUploadLoading } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const updatesDates = lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {};
 
@@ -88,6 +89,23 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     />
                 </ListItem>
 
+                {!isUploadComplete && <ListItem
+                    secondaryAction={
+                        isUploadLoading
+                            ? <CircularProgress />
+                            : <IconButton edge="end" aria-label="delete" onClick={() => dispatch(addCachedPointReportAction())}>
+                                <CloudUploadIcon/>
+                            </IconButton>
+                    }
+                >
+                    <ListItemIcon>
+                        <ErrorIcon color="warning" />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Есть не загруженные данные"
+                        secondary={'Не забудьте загрузить их при появлении доступа к интернету'}
+                    />
+                </ListItem>}
             </List>
         </Paper>
 }

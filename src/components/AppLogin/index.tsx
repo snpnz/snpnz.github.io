@@ -14,7 +14,6 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-
         const params = new URLSearchParams(document.location.search.substring(1));
         const token = params.get("token");
         const id = params.get("id");
@@ -22,10 +21,12 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
         if (token && id && expiration) {
             lsSet(LsKey.AuthData, { token, id, expiration });
+            setTimeout(() => {
+                window.location.href ='/login';
+            }, 1500);
         }
 
         dispatch(updateUserDataAction());
-
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -33,7 +34,6 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             navigate('/');
         }
     }, [user, navigate]);
-
 
 
     return <section>

@@ -82,6 +82,17 @@ function App() {
 
     }
 
+    let upIcon = <CircularProgress />;
+    if (isUploadLoading) {
+        upIcon = <CircularProgress />;
+    } else if (!isOnline) {
+        upIcon = <CloudOffIcon />
+    } else if (!isUploadComplete) {
+        upIcon = <CloudUploadIcon/>;
+    } else if (isUploadComplete) {
+        upIcon = <CloudDoneIcon/>
+    }
+
     return (
         <ColorModeContext.Provider value={{ toggleColorMode: toggleTheme }}>
             <ThemeProvider theme={theme}>
@@ -94,10 +105,7 @@ function App() {
                                     Sn58
                                 </Typography>
                                 <IconButton sx={{ ml: 1 }} color="inherit" onClick={handleUploadClick}>
-                                    {!isUploadLoading && isUploadComplete && <CloudDoneIcon/>}
-                                    {!isUploadLoading && !isUploadComplete && isOnline && <CloudUploadIcon/>}
-                                    {!isOnline && !isUploadLoading && <CloudOffIcon />}
-                                    {isUploadLoading && <CircularProgress />}
+                                    {upIcon}
                                 </IconButton>
                             </Toolbar>
                         </AppBar>
