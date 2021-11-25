@@ -1,13 +1,15 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IAddPointReportRequest, IPoint, IPointReport, IUser} from "../types";
-import {addPointReport, getRemotePoints, getRemotePointsReports, updateUserData} from "../services/apiService";
+import {IAddPointReportRequest, ILocalUpdatesHistory, IPoint, IPointReport, IUser, ThemeMode} from "../types";
+import {addPointReport, getRemotePoints, getRemotePointsReports, updateUserData, addCachedPointReport} from "../services/apiService";
 import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
 
 interface IMainState {
-    themeMode: 'light' | 'dark';
+    themeMode: ThemeMode;
     isOnline: boolean;
     isUploadComplete: boolean;
+    isUploadLoading: boolean;
+    uploadError: string;
     points: IPoint[];
     isPointsLoading: boolean;
     pointsLoadingError: string;
@@ -23,10 +25,19 @@ interface IMainState {
     userError: string;
     user: IUser | null;
 }
+
+function getSystemTheme(): ThemeMode {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? "dark"
+        :"light";
+}
+
 const  initialState: IMainState = {
-    themeMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark":"light",
+    themeMode: lsGet<ThemeMode>(LsKey.Theme) || getSystemTheme(),
     isOnline: navigator.onLine,
-    isUploadComplete: false,
+    isUploadComplete: !lsGet<IAddPointReportRequest[]>(LsKey.SaveReport),
+    isUploadLoading: false,
+    uploadError: '',
     points: lsGet<IPoint[]>(LsKey.Points) || [],
     isPointsLoading: false,
     pointsLoadingError: '',
@@ -43,6 +54,7 @@ const  initialState: IMainState = {
 export const getRemotePointsAction = createAsyncThunk('sn58/getRemotePointsAction', getRemotePoints);
 export const getRemotePointReportsAction = createAsyncThunk('sn58/getRemotePointReportsAction', getRemotePointsReports);
 export const addPointReportAction = createAsyncThunk('sn58/addPointReportAction', addPointReport);
+export const addCachedPointReportAction = createAsyncThunk('sn58/addCachedPointReportAction', addCachedPointReport);
 export const updateUserDataAction = createAsyncThunk('sn58/updateUserDataAction', updateUserData);
 
 const mainSlice = createSlice({
@@ -50,7 +62,9 @@ const mainSlice = createSlice({
     initialState: initialState,
     reducers: {
         toggleTheme: (state) => { // , action: PayloadAction<number>
-            state.themeMode = state.themeMode === 'light' ? 'dark' : 'light';
+            const val: ThemeMode = state.themeMode === 'light' ? 'dark' : 'light';
+            state.themeMode = val;
+            lsSet<ThemeMode>(LsKey.Theme, val);
         },
         setOnlineState: (state, action: PayloadAction<boolean>) => { //
             state.isOnline = action.payload;
@@ -73,7 +87,11 @@ const mainSlice = createSlice({
         })
         builder.addCase(getRemotePointsAction.fulfilled, (state, action) => {
             state.points = action.payload;
-            lsSet<IPoint[]>(LsKey.Points, action.payload)
+            lsSet<IPoint[]>(LsKey.Points, action.payload);
+            lsSet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory, {
+                ...lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {},
+                points: new Date()
+            })
             state.isPointsLoading = false;
         })
 
@@ -90,17 +108,20 @@ const mainSlice = createSlice({
         })
         builder.addCase(getRemotePointReportsAction.fulfilled, (state, action) => {
             state.pointReports = action.payload;
-            lsSet<IPointReport[]>(LsKey.PointReports, action.payload)
+            lsSet<IPointReport[]>(LsKey.PointReports, action.payload);
+            lsSet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory, {
+                ...lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {},
+                pointsReports: new Date()
+            })
             state.isPointReportsLoading = false;
         })
 
         builder.addCase(addPointReportAction.pending, (state, action) => {
+            state.isPointReportSaving = true;
             if (!state.isOnline) {
                 const already = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
                 lsSet<IAddPointReportRequest[]>(LsKey.SaveReport, [...already, action.payload!]);
                 state.pointReportError = 'Нет доступа к интернету';
-            } else {
-                state.isPointReportSaving = true;
             }
         })
         builder.addCase(addPointReportAction.rejected, (state, action) => {
@@ -110,6 +131,21 @@ const mainSlice = createSlice({
         builder.addCase(addPointReportAction.fulfilled, (state, action) => {
             lsRemove(LsKey.SaveReport);
             state.isPointReportSaving = false;
+        })
+
+        builder.addCase(addCachedPointReportAction.pending, (state, action) => {
+            state.isUploadLoading = true;
+        })
+        builder.addCase(addCachedPointReportAction.rejected, (state, action) => {
+            state.uploadError = (action?.payload as Error).message;
+            state.isUploadLoading = false;
+            state.isUploadComplete = false;
+        })
+        builder.addCase(addCachedPointReportAction.fulfilled, (state, action) => {
+            lsRemove(LsKey.SaveReport);
+            state.isUploadLoading = false;
+            state.uploadError = '';
+            state.isUploadComplete = true;
         })
 
         builder.addCase(updateUserDataAction.pending, (state, action) => {
@@ -122,6 +158,10 @@ const mainSlice = createSlice({
         })
         builder.addCase(updateUserDataAction.fulfilled, (state, action) => {
             lsSet<IUser>(LsKey.UserData, action.payload);
+            lsSet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory, {
+                ...lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {},
+                user: new Date()
+            })
             state.user = action.payload;
             state.isUserLoading = false;
         })

@@ -1,8 +1,0 @@
-.appHeader {
-  height: 60px;
-  line-height: 60px;
-  background-color: var(--dark-bg);
-  padding: 0 24px;
-  display: flex;
-  justify-content: space-between;
-}

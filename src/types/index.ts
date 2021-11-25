@@ -19,11 +19,11 @@ export interface IPoint {
 export interface IPointReport {
     comment: string;
     coordinates: number[];
-    created_at: Date;
+    created_at: string;
     id: number;
     id_point: number;
     id_user: number;
-    upload_at: Date;
+    upload_at: string;
     name: string;
 }
 
@@ -43,3 +43,11 @@ export interface IUser {
     stravaId: string;
     registerDate: string;
 }
+
+export interface ILocalUpdatesHistory {
+    points?: Date;
+    pointsReports?: Date;
+    user?: Date;
+}
+
+export type ThemeMode = 'light' | 'dark';

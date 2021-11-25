@@ -8,8 +8,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
-import {useAppDispatch, useAppSelector} from "../../store";
-import {toggleTheme} from "../../store/main.slice";
+import {useAppDispatch, useAppSelector} from "../../../../store";
+import {toggleTheme} from "../../../../store/main.slice";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -19,8 +19,8 @@ import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
 import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
 import {Avatar, Button, Typography} from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
-import {lsRemove} from "../../helpers/localStorageHelper";
-import {LsKey} from "../../types/lsKeys.enum";
+import {lsRemove} from "../../../../helpers/localStorageHelper";
+import {LsKey} from "../../../../types/lsKeys.enum";
 
 
 const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className }) => {
@@ -66,8 +66,7 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                         }
                         {!user && <Button sx={{ml:-1}} component={Link} to="/login" color="inherit">Войти</Button>}
                         {user && <Button sx={{ml:-1}} onClick={() => {
-                            lsRemove(LsKey.AuthData);
-                            lsRemove(LsKey.UserData);
+                            Object.values(LsKey).forEach(lsRemove)
                             window.location.reload();
                         }} color="inherit">Выйти</Button>}
                     </Box>

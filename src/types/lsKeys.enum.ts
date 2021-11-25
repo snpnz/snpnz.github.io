@@ -4,4 +4,6 @@ export enum LsKey {
     PointReports = 'saved_reports_points_ls',
     AuthData = 'snpzn-auth',
     UserData = 'snpzn-user',
+    LocalUpdatesHistory = 'loc-up-hist',
+    Theme = 'snpzn-theme',
 }

@@ -1,18 +1,25 @@
 import React, {HTMLAttributes} from 'react';
-import clsx from 'clsx';
-import styles from './style.module.css';
-import Screen from "../Screen";
-import {IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Typography} from '@mui/material';
+import {Button, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Typography} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import CloudIcon from '@mui/icons-material/Cloud';
-// import CloudOffIcon from '@mui/icons-material/CloudOff';
+import CloudOffIcon from '@mui/icons-material/CloudOff';
 import CachedIcon from '@mui/icons-material/Cached';
+import CircularProgress from '@mui/material/CircularProgress';
+import {useAppDispatch, useAppSelector} from "../../store";
+import {lsGet} from "../../helpers/localStorageHelper";
+import {ILocalUpdatesHistory} from "../../types";
+import {LsKey} from "../../types/lsKeys.enum";
+import {getRemotePointReportsAction, getRemotePointsAction} from "../../store/main.slice";
+import {Link} from "react-router-dom";
 
 
 const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
-    return <Screen className={clsx(styles.screen)}>
-        <Paper elevation={3} sx={{p: 4}}>
+    const { isPointsLoading, isPointReportsLoading, user, isOnline } = useAppSelector(s => s.main);
+    const dispatch = useAppDispatch();
+    const updatesDates = lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {};
+
+    return <Paper elevation={3} sx={{p: 4}}>
             <Typography variant="h4" component="h1">
                 Серебряная нить
             </Typography>
@@ -20,55 +27,69 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                 Состояние приложения
             </Typography>
             <List sx={{p:1}}>
-                <ListItem
-                    secondaryAction={
-                        <IconButton edge="end" aria-label="delete">
-                            <CachedIcon />
-                        </IconButton>
-                    }
-                >
-                        <ListItemIcon>
-                            <CheckCircleIcon color="success" />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Список точек маршрута"
-                            secondary={'Secondary text'}
-                        />
+                <ListItem>
+                    <ListItemIcon>
+                        {isOnline ? <CloudIcon color="success" /> : <CloudOffIcon color="warning" />}
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Доступ к интернету"
+                        secondary={isOnline ? 'Есть' : 'Без достпа к интеренету можно пользоваться, но нельзя выгрузить данные'}
+                    />
                 </ListItem>
                 <ListItem
                     secondaryAction={
-                        <IconButton edge="end" aria-label="delete">
-                            <CachedIcon />
-                        </IconButton>
+                        !user && (
+                            <Button component={Link} to={'/login'}>
+                                Войти
+                            </Button>
+                        )
                     }
                 >
                     <ListItemIcon>
-                        <ErrorIcon color="error" />
+                        {user ? <CheckCircleIcon color="success" /> : <ErrorIcon color="error" />}
                     </ListItemIcon>
                     <ListItemText
                         primary="Авторизация пользователя"
-                        secondary={'Secondary text'}
+                        secondary={user ? user.name + ' ' + user.surname : 'Функционал все равно будет доступен. Но для выгрузки надо авторизоваться'}
                     />
                 </ListItem>
                 <ListItem
                     secondaryAction={
-                        <IconButton edge="end" aria-label="delete">
+                        isPointsLoading
+                            ? <CircularProgress />
+                            : <IconButton edge="end" aria-label="delete" onClick={() => dispatch(getRemotePointsAction())}>
                             <CachedIcon />
                         </IconButton>
                     }
                 >
                     <ListItemIcon>
-                        <CloudIcon color="success" />
+                        {updatesDates?.points ? <CheckCircleIcon color="success" /> : <ErrorIcon color="error" />}
                     </ListItemIcon>
                     <ListItemText
-                        primary="Single-line item"
-                        secondary={'Secondary text'}
+                        primary="Список точек маршрута"
+                        secondary={updatesDates?.points ? updatesDates?.points.toLocaleString() : 'Нет данных'}
                     />
                 </ListItem>
+                <ListItem
+                    secondaryAction={
+                        isPointReportsLoading
+                            ? <CircularProgress />
+                            : <IconButton edge="end" aria-label="delete" onClick={() => dispatch(getRemotePointReportsAction())}>
+                                <CachedIcon />
+                            </IconButton>
+                    }
+                >
+                    <ListItemIcon>
+                        {updatesDates?.pointsReports ? <CheckCircleIcon color="success" /> : <ErrorIcon color="warning" />}
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Список отметок на точках"
+                        secondary={updatesDates?.pointsReports ? updatesDates?.pointsReports.toLocaleString() : 'Нет данных'}
+                    />
+                </ListItem>
+
             </List>
         </Paper>
-
-    </Screen>
 }
 
 export default AppWelcome;

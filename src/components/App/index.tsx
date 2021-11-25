@@ -4,16 +4,22 @@ import AppWelcome from "../AppWelcome";
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {AppBar, Toolbar, Typography, Container, Fab} from "@mui/material";
+import {AppBar, Toolbar, Typography, Container, Fab, CircularProgress} from "@mui/material";
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
 
-import Menu from "../Menu";
+import Menu from "./components/Menu";
 import AppScan from "../AppScan";
 import {useAppDispatch, useAppSelector} from "../../store";
-import {setOnlineState, toggleTheme} from "../../store/main.slice";
+import {
+    addCachedPointReportAction,
+    getRemotePointReportsAction,
+    getRemotePointsAction,
+    setOnlineState,
+    toggleTheme
+} from "../../store/main.slice";
 import {notifyWithState} from "../../helpers/notificationHelper";
 import AppCheckpoint from "../AppCheckpoint";
 import AppMy from "../AppMy";
@@ -25,7 +31,7 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 function App() {
     const [showScanBtn, setShowScanBtn] = React.useState<boolean>(true);
-    const { themeMode, isOnline, isUploadComplete } = useAppSelector(s => s.main);
+    const { themeMode, isOnline, isUploadComplete, user, isUploadLoading } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const location = useLocation();
 
@@ -49,9 +55,32 @@ function App() {
             dispatch(setOnlineState(navigator.onLine));
         }
 
+        if (isOnline) {
+            dispatch(getRemotePointsAction());
+            user && dispatch(getRemotePointReportsAction());
+        }
+
         window.addEventListener('online',  updateOnlineStatus);
         window.addEventListener('offline', updateOnlineStatus);
-    }, [dispatch]);
+    }, [dispatch, user, isOnline]);
+
+    function handleUploadClick() {
+        if (!isUploadLoading && !isUploadComplete && isOnline) {
+            dispatch(addCachedPointReportAction());
+            return;
+        }
+
+        if (isUploadComplete) {
+            notifyWithState('success', 'Все данные уже загружены');
+            return;
+        }
+
+
+        if (!isOnline && !isUploadLoading) {
+            notifyWithState('error', 'Нет доступа к интернету')
+        }
+
+    }
 
     return (
         <ColorModeContext.Provider value={{ toggleColorMode: toggleTheme }}>
@@ -61,13 +90,14 @@ function App() {
                         <AppBar position="static">
                             <Toolbar>
                                 <Menu />
-                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                <Typography component={Link} to={'/'} color="inherit" variant="h6" sx={{ flexGrow: 1, textDecoration:'none' }}>
                                     Sn58
                                 </Typography>
-                                <IconButton sx={{ ml: 1 }} onClick={() => notifyWithState('warning', 'Ololo')} color="inherit">
-                                    {isUploadComplete && <CloudDoneIcon />}
-                                    {!isUploadComplete && isOnline && <CloudUploadIcon />}
-                                    {!isOnline && <CloudOffIcon />}
+                                <IconButton sx={{ ml: 1 }} color="inherit" onClick={handleUploadClick}>
+                                    {!isUploadLoading && isUploadComplete && <CloudDoneIcon/>}
+                                    {!isUploadLoading && !isUploadComplete && isOnline && <CloudUploadIcon/>}
+                                    {!isOnline && !isUploadLoading && <CloudOffIcon />}
+                                    {isUploadLoading && <CircularProgress />}
                                 </IconButton>
                             </Toolbar>
                         </AppBar>
