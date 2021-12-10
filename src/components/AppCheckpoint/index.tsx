@@ -12,6 +12,7 @@ import {useAppDispatch, useAppSelector} from "../../store";
 import {addPointReportAction, getRemotePointsAction} from '../../store/main.slice';
 import {IPoint} from "../../types";
 import {getSQLDate} from "../../helpers/dateHelper";
+import {getCurrentGeoLocationAsync} from "../../helpers/geoLocationHelper";
 
 
 
@@ -55,24 +56,14 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     }, [location]);
 
 
-    const getLocation = () => {
-        if (!navigator.geolocation) {
-            setGpsErr('Geolocation is not supported by your browser');
-        } else {
-
-            navigator.permissions.query({name:'geolocation'}).then(function(result) {
-                if (result.state === 'denied') {
-                    setGpsErr('Нужно дать разрешение доступа к геопозиции');
-                }
-            });
-
-            navigator.geolocation.getCurrentPosition((position) => {
-                setGpsErr(null);
-                setLat(position.coords.latitude);
-                setLng(position.coords.longitude);
-            }, () => {
-                setGpsErr('Unable to retrieve your location');
-            });
+    const getLocation = async () => {
+        try {
+            const [lt, ln] = await getCurrentGeoLocationAsync();
+            setGpsErr(null);
+            setLat(lt);
+            setLng(ln);
+        } catch (e) {
+            setGpsErr((e as Error).message);
         }
     }
 

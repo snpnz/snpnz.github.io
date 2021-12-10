@@ -6004,6 +6004,11 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
+idb@^6.1.4:
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/idb/-/idb-6.1.5.tgz#dbc53e7adf1ac7c59f9b2bf56e00b4ea4fce8c7b"
+  integrity sha512-IJtugpKkiVXQn5Y+LteyBCNk1N8xpGV3wWZk9EVtZWH8DYkjBn0bX1XnGP9RkyZF0sAcywa6unHqSWKe7q4LGw==
+
 identity-obj-proxy@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/identity-obj-proxy/-/identity-obj-proxy-3.0.0.tgz#94d2bda96084453ef36fbc5aaec37e0f79f1fc14"
@@ -7227,6 +7232,23 @@ last-call-webpack-plugin@^3.0.0:
   dependencies:
     lodash "^4.17.5"
     webpack-sources "^1.1.0"
+
+leaflet.locatecontrol@^0.76.0:
+  version "0.76.0"
+  resolved "https://registry.yarnpkg.com/leaflet.locatecontrol/-/leaflet.locatecontrol-0.76.0.tgz#afca63a3ccf3161bed0e8bf94a98ddba364e90e1"
+  integrity sha512-Mx8uiihBi8KrrW3LgblsNL/pS8HR0gj60m8VFDFrnhSvDuitChazc095XcMSscf/XqZW+TSqQMCTe+AUy/4/eA==
+
+leaflet.offline@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/leaflet.offline/-/leaflet.offline-2.1.0.tgz#9cd69e30ab8c2c816cd90dcc1eaace5e24c2f75f"
+  integrity sha512-dAOGS25jh6uXziAfz24/xTep8Z6oaQm5fuN0xQddhBobbNCk3lL7pn6qqh081PjB84ESyMFpgBOypZ22gJbRfw==
+  dependencies:
+    idb "^6.1.4"
+
+leaflet@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.7.1.tgz#10d684916edfe1bf41d688a3b97127c0322a2a19"
+  integrity sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==
 
 leven@^3.1.0:
   version "3.1.0"

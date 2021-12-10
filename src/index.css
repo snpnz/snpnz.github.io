@@ -1,0 +1,19 @@
+.map-marker {
+    border: 1px solid red;
+    border-radius: 50%;
+    position: relative;
+    background-color: rgba(255,0,0,0.34);
+}
+.map-marker span:before {
+    content: attr(title);
+    font-size: 12px;
+    white-space: nowrap;
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 5px;
+    color: #000;
+    text-shadow: 1px 1px 0 #fff;
+    font-weight: bold;
+}

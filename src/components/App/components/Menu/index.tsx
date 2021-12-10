@@ -19,6 +19,7 @@ import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
 import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
 import {Avatar, Button, Typography} from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
+import MapIcon from '@mui/icons-material/Map';
 import {lsRemove} from "../../../../helpers/localStorageHelper";
 import {LsKey} from "../../../../types/lsKeys.enum";
 
@@ -98,6 +99,13 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                         <AddLocationSharpIcon />
                     </ListItemIcon>
                     <ListItemText primary={"Добавить вручную"} />
+                </ListItem>
+                <Divider />
+                <ListItem button component={Link} to={"/map"}>
+                    <ListItemIcon>
+                        <MapIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Карта"} />
                 </ListItem>
                 <Divider />
                 <List>

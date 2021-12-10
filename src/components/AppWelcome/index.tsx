@@ -13,6 +13,7 @@ import {LsKey} from "../../types/lsKeys.enum";
 import {addCachedPointReportAction, getRemotePointReportsAction, getRemotePointsAction} from "../../store/main.slice";
 import {Link} from "react-router-dom";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import WidgetCurrent from "../WidgetCurrent";
 
 
 const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
@@ -107,6 +108,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     />
                 </ListItem>}
             </List>
+            <WidgetCurrent />
         </Paper>
 }
 

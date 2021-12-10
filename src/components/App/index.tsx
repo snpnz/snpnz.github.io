@@ -25,6 +25,7 @@ import AppCheckpoint from "../AppCheckpoint";
 import AppMy from "../AppMy";
 import AppList from "../AppList";
 import AppLogin from "../AppLogin";
+import AppMap from "../AppMap";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -124,6 +125,7 @@ function App() {
                                 <Route path="my" element={<AppMy />} />
                                 <Route path="list" element={<AppList />} />
                                 <Route path="login" element={<AppLogin />} />
+                                <Route path="map" element={<AppMap />} />
                             </Routes>
                         </Container>
                     </Box>
