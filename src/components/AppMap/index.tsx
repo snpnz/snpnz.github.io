@@ -125,8 +125,8 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     return <div
         ref={mapContainerRef}
-        style={{width: '100vw', height: 'calc(100vh - 64px)', 'position': 'fixed', bottom: 0, left: 0}}>
-    </div>
+        style={{width: '100vw', height: 'calc(100vh - 64px)', margin: '0 -24px'}}
+    />
 
 }
 

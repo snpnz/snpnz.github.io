@@ -133,6 +133,7 @@ function App() {
                         position: 'fixed',
                         bottom: (theme) => theme.spacing(2),
                         right: (theme) => theme.spacing(2),
+                        zIndex: 999
                     }}>
                         <QrCodeScannerIcon sx={{ mr: 1 }} />
                         Сканировать
