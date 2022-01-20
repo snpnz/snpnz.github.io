@@ -1,4 +1,3 @@
-import { group } from "console";
 import {IPoint, IPointReport, IUser} from "../types";
 
 export const mapBackPointToFront = (backModel: {[key: string]: string}): IPoint => {
