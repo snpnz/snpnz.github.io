@@ -14,17 +14,20 @@ const AppScan: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         console.log(err)
     }
 
-    const handleScan = (data: string | null) => {
-        if (data !== val) {
-            data && onChange(data);
-            setVal(data);
-        }
-    }
 
     const onChange = (data: string | null) => {
         data && window.navigator.vibrate(300);
         data && navigate('/add?code=' + data);
     }
+
+    const handleScan = (data: string | null) => {
+        if (data !== val) {
+            data && onChange(data.replace('https://sn58.tk/?code=',''));
+            setVal(data);
+        }
+    }
+
+
 
     return <section>
         <Typography variant="h6" component="h4" gutterBottom sx={{p: 1, mt: 2}}  onDoubleClick={() => onChange('CECUt8XuFLHqLDJt')}>

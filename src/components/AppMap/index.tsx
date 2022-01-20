@@ -11,8 +11,8 @@ import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import storageLayer from './storageLayer';
 import {notifyWithState} from "../../helpers/notificationHelper";
-export const urlTemplate = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
+import {mapBoxAttribution, mapBoxTilesUrl, osmTilesUrl, winterPistesTilesUrl, winterTilesUrl} from "./const";
+import {IPoint} from "../../types";
 
 const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const { points, isPointsLoading, pointsLoadingError } = useAppSelector(s => s.main);
@@ -24,16 +24,35 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             return;
         }
         const map = new L.Map(mapContainerRef.current);
+        const pointsLayer = L.layerGroup().addTo(map);
+
         const baseLayer = L.tileLayer
-            .offline(urlTemplate, {
+            .offline(osmTilesUrl, {
                 attribution: 'Map data {attribution.OpenStreetMap}',
                 subdomains: 'abc',
                 minZoom: 8,
             })
             .addTo(map);
-// add buttons to save tiles in area viewed
+
+        const mbLayer = L.tileLayer(
+            mapBoxTilesUrl,
+            {
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                attribution: mapBoxAttribution
+            }
+            );
+        const winterLayer = L.tileLayer(
+            winterPistesTilesUrl,
+            {
+                id: 'mapbox/winter-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                attribution: mapBoxAttribution
+            }
+        ).addTo(map);
         const control = L.control.savetiles(baseLayer, {
-            //zoomlevels: [14, 18], // optional zoomlevels to save, default current zoomlevel
             confirm(layer: any, successCallback: any) {
                 // eslint-disable-next-line no-alert
                 if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
@@ -58,16 +77,19 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             }
         }).addTo(map);
 
-        // getCurrentGeoLocationAsync().then(([lat, lng]) => {
-        //     map.setView({ lat, lng }, 16)
-        // });
-// layer switcher control
         const layerswitcher = L.control
             .layers({
-                'osm (offline)': baseLayer,
-            }, null, { collapsed: false, position: 'bottomleft'})
+                'OSM (offline)': baseLayer,
+                'MapBox': mbLayer,
+            }, {
+                winterLayer,
+                'points': pointsLayer
+            }, {
+                collapsed: false,
+                position: 'bottomleft'
+            })
             .addTo(map);
-// add storage overlay
+
         storageLayer(baseLayer, layerswitcher);
 
         let progress = 0;
@@ -83,7 +105,7 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         if (points.length) {
             const boundCoordinates: Array<[number,number]> = [];
 
-            points.forEach(point => {
+            points.forEach((point: IPoint) => {
                 boundCoordinates.push([point.point[0], point.point[1]]);
                 const icon = L.divIcon({
                     className: 'map-marker',
@@ -91,7 +113,7 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     iconSize: [8, 8],
                     iconAnchor: [4, 4]
                 });
-                L.marker([point.point[0], point.point[1]], {icon}).addTo(map).bindPopup(point.name);
+                L.marker([point.point[0], point.point[1]], {icon}).addTo(pointsLayer).bindPopup(point.name);
             })
             const bounds = L.latLngBounds(boundCoordinates);
             if (bounds.isValid()) { map.fitBounds(bounds); } else {
@@ -125,7 +147,7 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     return <div
         ref={mapContainerRef}
-        style={{width: '100vw', height: 'calc(100vh - 64px)', margin: '0 -24px'}}
+        style={{width: '100vw', height: 'calc(100vh - 64px)', position: 'absolute', left: 0, bottom: 0}}
     />
 
 }

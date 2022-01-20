@@ -2,14 +2,14 @@
 import { getStorageInfo, getStoredTilesAsJson } from 'leaflet.offline';
 // @ts-ignore
 import * as L from 'leaflet';
-import { urlTemplate } from './const';
+import { osmTilesUrl } from './const';
 import {notifyWithState} from "../../helpers/notificationHelper";
 
 
 export default function storageLayer(baseLayer: any, layerswitcher: any) {
     let layer: any;
 
-    const getGeoJsonData = () => getStorageInfo(urlTemplate)
+    const getGeoJsonData = () => getStorageInfo(osmTilesUrl)
         .then((tiles: any) => getStoredTilesAsJson(baseLayer, tiles));
 
     const addStorageLayer = () => {

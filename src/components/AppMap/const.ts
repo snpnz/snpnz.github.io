@@ -1,3 +1,6 @@
-export const urlTemplate = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-export const wmtsUrlTemplate =
-    'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?service=WMTS&request=GetTile&version=1.0.0&tilematrixset=EPSG:3857&layer={layer}&tilematrix={z}&tilerow={y}&tilecol={x}&format=image%2Fpng';
+export const osmTilesUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+export const mapBoxAttribution = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+export const mapBoxTilesUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+
+export const winterTilesUrl = 'https://tiles.opensnowmap.org/base_snow_map/{z}/{x}/{y}.png';
+export const winterPistesTilesUrl = 'https://tiles.opensnowmap.org/pistes/{z}/{x}/{y}.png';
