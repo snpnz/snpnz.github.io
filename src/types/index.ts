@@ -14,6 +14,11 @@ export interface IPoint {
     point: number[];
     description: string;
     code: string;
+    group?: {
+        id: number;
+        name: string;
+        description?: string;
+    } | null
 }
 
 export interface IPointReport {

@@ -1,3 +1,4 @@
+import { group } from "console";
 import {IPoint, IPointReport, IUser} from "../types";
 
 export const mapBackPointToFront = (backModel: {[key: string]: string}): IPoint => {
@@ -6,7 +7,12 @@ export const mapBackPointToFront = (backModel: {[key: string]: string}): IPoint 
         description: backModel.description,
         id: +backModel.id,
         name: backModel.name,
-        point: backModel.point.split(',').map(Number)
+        point: backModel.point.split(',').map(Number),
+        group: !+backModel.id_point_group ? null : {
+            id: +backModel.id_point_group,
+            name: backModel.group_name,
+            description: backModel.group_description
+        }
     }
 }
 export const mapBackPointReportToFront = (backModel: {[key: string]: string}): IPointReport => {

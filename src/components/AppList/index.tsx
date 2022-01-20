@@ -3,6 +3,7 @@ import {Alert, Box, List, ListItemButton, ListItemText, Typography, CircularProg
 import {useAppDispatch, useAppSelector} from "../../store";
 import Button from "@mui/material/Button";
 import {getRemotePointsAction} from "../../store/main.slice";
+import ListSubheader from '@mui/material/ListSubheader';
 
 const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const { points, isPointsLoading, pointsLoadingError } = useAppSelector(s => s.main);
@@ -30,6 +31,7 @@ const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         }>Не загружены точки {pointsLoadingError}</Alert>
     }
 
+    let lastGroup: React.ReactNode;
     return <section>
         <Typography variant="h6" component="h4" gutterBottom sx={{p: 1, mt: 2}}>
             Все точки
@@ -37,10 +39,16 @@ const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         <Box>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {points.map(point => {
+                    let sh = null;
+                    if (lastGroup !== point?.group?.name) {
+                        lastGroup = point?.group?.name
+                        sh = <ListSubheader>{lastGroup}</ListSubheader>;
+                    }
+                    
                     return (
-                        <ListItemButton key={point.id}>
+                        <>{sh}<ListItemButton key={point.id}>
                             <ListItemText primary={point.name} secondary={point.description} />
-                        </ListItemButton>
+                        </ListItemButton></>
                     );
                 })}
             </List>

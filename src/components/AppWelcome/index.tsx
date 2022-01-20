@@ -23,7 +23,9 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     return <Paper elevation={3} sx={{p: 4}}>
             <Typography variant="h4" component="h1">
-                Серебряная нить
+                Здесь был<small>(a)</small>
+                &thinsp;
+                <strong>{user?.name || 'Вася'}!</strong>
             </Typography>
             <Typography variant="subtitle1" component="h1" gutterBottom>
                 Состояние приложения

@@ -119,7 +119,7 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => {
                 return (<ListItem {...props}>
-                    <ListItemText primary={option.name} secondary={formatDistance(option.dist)}/>
+                    <ListItemText primary={option.name + ` (${formatDistance(option.dist)})`} secondary={option?.group?.name || ''}/>
                 </ListItem>);
             }}
             renderInput={(params) => (
@@ -144,9 +144,13 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         Целевая точка
                     </Typography>
-                    <Typography variant="h5" component="div">
+                    <Typography variant="h5" component="span">
                         {point.name}
+                        
                     </Typography>
+                    {point?.group?.name && <Typography color="text.secondary">
+                            {point?.group?.name}
+                        </Typography>}
                     <Typography variant="body2">
                         {point.description}
                     </Typography>
