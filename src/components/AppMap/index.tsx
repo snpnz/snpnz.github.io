@@ -11,7 +11,7 @@ import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import storageLayer from './storageLayer';
 import {notifyWithState} from "../../helpers/notificationHelper";
-import {mapBoxAttribution, mapBoxTilesUrl, osmTilesUrl, winterPistesTilesUrl, winterTilesUrl} from "./const";
+import {mapBoxAttribution, mapBoxTilesUrl, osmTilesUrl, winterPistesTilesUrl} from "./const";
 import {IPoint} from "../../types";
 
 const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
