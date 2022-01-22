@@ -30,6 +30,18 @@ export interface IPointReport {
     id_user: number;
     upload_at: string;
     name: string;
+    group?: {
+        id: number;
+        name: string;
+        description?: string;
+    } | null
+}
+
+export interface IPointReportAll extends IPointReport {
+    user: {
+        name: string;
+        photo: string;
+    }
 }
 
 export interface IAddPointReportRequest {

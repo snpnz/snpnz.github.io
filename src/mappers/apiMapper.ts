@@ -1,4 +1,4 @@
-import {IPoint, IPointReport, IUser} from "../types";
+import {IPoint, IPointReport, IPointReportAll, IUser} from "../types";
 
 export const mapBackPointToFront = (backModel: {[key: string]: string}): IPoint => {
     return {
@@ -24,6 +24,16 @@ export const mapBackPointReportToFront = (backModel: {[key: string]: string}): I
         id_point: +backModel.id_point,
         id_user: +backModel.id_user,
         name: backModel.name,
+    }
+}
+
+export const mapBackPointReportToFrontForAll = (backModel: {[key: string]: string}): IPointReportAll => {
+    return {
+        ...mapBackPointReportToFront(backModel),
+        user: {
+            name: backModel.username,
+            photo: backModel.userphoto
+        }
     }
 }
 

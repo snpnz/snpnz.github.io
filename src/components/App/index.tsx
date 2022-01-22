@@ -26,6 +26,7 @@ import AppMy from "../AppMy";
 import AppList from "../AppList";
 import AppLogin from "../AppLogin";
 import AppMap from "../AppMap";
+import AppAll from "../AppAll";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -126,6 +127,7 @@ function App() {
                                 <Route path="list" element={<AppList />} />
                                 <Route path="login" element={<AppLogin />} />
                                 <Route path="map" element={<AppMap />} />
+                                <Route path="all" element={<AppAll />} />
                             </Routes>
                         </Container>
                     </Box>

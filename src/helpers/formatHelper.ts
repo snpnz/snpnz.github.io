@@ -12,6 +12,6 @@ export function declOfNum(num: number, titles: string[]) {
 }
 
 export function formatDistance(d: number) {
-    if (!(d > 0)) { return '-'; }
+    if (!(d > 0)) { return '0'; }
     return d > 1000 ? `${(d / 1000).toFixed(2)}\u202fкм` : `${(d).toFixed()}\u2009м`;
 }

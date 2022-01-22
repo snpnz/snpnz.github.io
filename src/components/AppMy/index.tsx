@@ -43,7 +43,7 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         <Box>
             {
                 !isUploadComplete && <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                    {lsGet<IAddPointReportRequest[]>(LsKey.SaveReport)!.map(point => {
+                    {lsGet<IAddPointReportRequest[]>(LsKey.SaveReport)?.map(point => {
                         return (
                             <ListItemButton key={point.comment + point.created_at + point.id_point}>
                                 <ListItemAvatar>

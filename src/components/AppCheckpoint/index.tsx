@@ -13,8 +13,10 @@ import {addPointReportAction, getRemotePointsAction} from '../../store/main.slic
 import {IPoint} from "../../types";
 import {getSQLDate} from "../../helpers/dateHelper";
 import {getCurrentGeoLocationAsync} from "../../helpers/geoLocationHelper";
+import RadarIcon from '@mui/icons-material/Radar';
 
 
+const validation_distance = 500;
 
 const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const [comment, setComment] = React.useState<string>('');
@@ -135,7 +137,9 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         />
     }
 
-    const dist = getDistanceBetweenPointsInMeters([point.point[0], point.point[1]], [lat, lng])
+    const dist = getDistanceBetweenPointsInMeters([point.point[0], point.point[1]], [lat, lng]);
+
+    const isValid = dist < validation_distance || window.location.hash === '#noverify';  
 
     return <section>
         <Box sx={{ minWidth: 275, mt:2 }}>
@@ -146,7 +150,6 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     </Typography>
                     <Typography variant="h5" component="span">
                         {point.name}
-                        
                     </Typography>
                     {point?.group?.name && <Typography color="text.secondary">
                             {point?.group?.name}
@@ -154,14 +157,17 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     <Typography variant="body2">
                         {point.description}
                     </Typography>
+                    {point.group?.name && <Typography variant="body2">
+                        {point.group?.name}
+                    </Typography>}
                 </CardContent>
             </Card>
         </Box>
         <Box sx={{ minWidth: 275, mt:2, mb: 2 }}>
             <Card variant="outlined">
                 <CardContent>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        Текущая точка
+                    <Typography sx={{ fontSize: 14, display:'flex', alignItems:'center' }} color="text.secondary" gutterBottom>
+                     <RadarIcon color={isValid ? 'success' : 'error'} /> &nbsp; Текущая точка
                     </Typography>
                     <Typography variant="body2">
                         <Link href={`geo:${lat},${lng}`}>{lat},{lng}</Link>
@@ -185,10 +191,14 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                 sx={{ mt: 2 }}
                 fullWidth
                 autoFocus
+                disabled={!isValid}
             />
-            <Button sx={{ mt:3 }} variant="contained" size="large" type="submit" fullWidth disabled={isPointReportSaving}>
+            <Button sx={{ mt:3 }} variant="contained" size="large" type="submit" fullWidth disabled={!isValid || isPointReportSaving}>
                 Сохранить отметку
             </Button>
+            {!isValid && <Alert severity="warning" sx={{my: 3}} >
+                Вы находитесь слишком далеко от точки "{point.name}" ({formatDistance(dist)}, допустимо - {formatDistance(validation_distance)})
+                </Alert>}
             {pointReportError && <Alert>{pointReportError}</Alert>}
         </form>
     </section>

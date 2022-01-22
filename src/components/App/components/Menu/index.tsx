@@ -13,6 +13,7 @@ import {toggleTheme} from "../../../../store/main.slice";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import {Link} from "react-router-dom";
 import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
@@ -78,6 +79,12 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                         <PlaylistAddCheckIcon />
                     </ListItemIcon>
                     <ListItemText primary={"Мои отметки"} />
+                </ListItem>
+                <ListItem button component={Link} to={"/all"}>
+                    <ListItemIcon>
+                        <PeopleAltIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Все отметки"} />
                 </ListItem>
                 <ListItem button component={Link} to={"/list"}>
                     <ListItemIcon>

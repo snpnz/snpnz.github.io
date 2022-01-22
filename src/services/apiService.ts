@@ -1,6 +1,6 @@
 import {get, post} from "../helpers/httpClient";
-import {mapBackPointReportToFront, mapBackPointToFront, mapBackUserToFront} from "../mappers/apiMapper";
-import {IAddPointReportRequest, IPoint, IPointReport, IUser} from "../types";
+import {mapBackPointReportToFront, mapBackPointReportToFrontForAll, mapBackPointToFront, mapBackUserToFront} from "../mappers/apiMapper";
+import {IAddPointReportRequest, IPoint, IPointReport, IPointReportAll, IUser} from "../types";
 import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
 
@@ -13,6 +13,13 @@ export const getRemotePointsReports = async (): Promise<IPointReport[]> => {
     const { data } = await get('/api/points_report/');
     return data.map(mapBackPointReportToFront);
 }
+
+
+export const getRemotePointsReportsForAll = async (): Promise<IPointReportAll[]> => {
+    const { data } = await get('/api/points_report/?all=1');
+    return data.map(mapBackPointReportToFrontForAll);
+}
+
 
 export const addPointReport = async (request: IAddPointReportRequest): Promise<IPointReport[]> => {
     if (!navigator.onLine) {
