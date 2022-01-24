@@ -20,6 +20,8 @@ import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
 import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
 import {Avatar, Button, Typography} from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+
 import MapIcon from '@mui/icons-material/Map';
 import {lsRemove} from "../../../../helpers/localStorageHelper";
 import {LsKey} from "../../../../types/lsKeys.enum";
@@ -122,6 +124,16 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                                 {themeMode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
                             </ListItemIcon>
                             <ListItemText primary={themeMode === 'dark' ? 'Светлая тема' : 'Тёмная тема'} />
+                        </ListItem>
+                </List>
+                <Divider />
+                <List>
+
+                        <ListItem button component={Link} to={"/about"}>
+                            <ListItemIcon>
+                                <InfoTwoToneIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="О приложении" />
                         </ListItem>
                 </List>
             </Box>

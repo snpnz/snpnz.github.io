@@ -17,6 +17,9 @@ export const getRemotePointsReports = async (): Promise<IPointReport[]> => {
 
 export const getRemotePointsReportsForAll = async (): Promise<IPointReportAll[]> => {
     const { data } = await get('/api/points_report/?all=1');
+    if (data && !data.length) {
+        throw new Error('Список пуст');
+    }
     return data.map(mapBackPointReportToFrontForAll);
 }
 
@@ -44,6 +47,9 @@ export const addCachedPointReport = async (): Promise<IPointReport[]> => {
 
 export const updateUserData = async (): Promise<IUser> => {
     const { data } = await get('/api/user/');
+    if (!data) {
+        throw new Error('Пожалуйста авторизуйтесь');
+    }
     return mapBackUserToFront(data);
 }
 

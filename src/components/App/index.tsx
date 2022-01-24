@@ -27,6 +27,7 @@ import AppList from "../AppList";
 import AppLogin from "../AppLogin";
 import AppMap from "../AppMap";
 import AppAll from "../AppAll";
+import AppAbout from "../AppAbout";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -100,7 +101,7 @@ function App() {
             <ThemeProvider theme={theme}>
                 <main style={{display:'flex', flexDirection: 'column', height:'100vh'}}>
                     <Box>
-                        <AppBar position="static">
+                        <AppBar position="fixed">
                             <Toolbar>
                                 <Menu />
                                 <Typography component={Link} to={'/'} color="inherit" variant="h6" sx={{ flexGrow: 1, textDecoration:'none' }}>
@@ -112,6 +113,7 @@ function App() {
                             </Toolbar>
                         </AppBar>
                     </Box>
+                    <Toolbar />
                     <Box sx={{
                         bgcolor: 'background.default',
                         color: 'text.primary',
@@ -128,6 +130,7 @@ function App() {
                                 <Route path="login" element={<AppLogin />} />
                                 <Route path="map" element={<AppMap />} />
                                 <Route path="all" element={<AppAll />} />
+                                <Route path="about" element={<AppAbout />} />
                             </Routes>
                         </Container>
                     </Box>

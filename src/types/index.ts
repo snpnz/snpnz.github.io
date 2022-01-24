@@ -24,11 +24,11 @@ export interface IPoint {
 export interface IPointReport {
     comment: string;
     coordinates: number[];
-    created_at: string;
+    created_at: Date;
     id: number;
     id_point: number;
     id_user: number;
-    upload_at: string;
+    upload_at: Date;
     name: string;
     group?: {
         id: number;

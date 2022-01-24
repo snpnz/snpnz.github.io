@@ -4,6 +4,7 @@ import {useAppSelector} from "../../store";
 import Button from "@mui/material/Button";
 import {IPointReportAll} from "../../types";
 import { getRemotePointsReportsForAll } from '../../services/apiService';
+import { getHumanDate } from '../../helpers/dateHelper';
 
 const AppAll: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const { isOnline } = useAppSelector(s => s.main);
@@ -56,7 +57,7 @@ const AppAll: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     }
 
     return <section>
-        <Typography variant="h6" component="h4" gutterBottom sx={{p: 1, mt: 2}}>
+        <Typography variant="h6" component="h4" gutterBottom sx={{py: 1, mt: 2}}>
             Отметки всех пользователей
         </Typography>
         <Box>
@@ -68,7 +69,12 @@ const AppAll: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                                 <Avatar alt={point.user.name} src={point.user.photo} />
                             </ListItemAvatar>
                             <ListItemText
-                                primary={point.user.name + ' ' + point.created_at.toLocaleString()}
+                                primary={<>
+                                {point.user.name}
+                                <Typography variant="caption"  display="block" gutterBottom>
+                                    {getHumanDate(point.created_at)}
+                                </Typography>
+                                </>}
                                 secondary={<>
                                     <strong>{point.name}</strong>
                                     <br />

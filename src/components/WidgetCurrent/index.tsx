@@ -38,10 +38,15 @@ const WidgetCurrent: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     }
 
     const distPoints = points
-        .map((x: IPoint) => ({...x, dist: getDistanceBetweenPointsInMeters([x.point[0], x.point[1]], latLng)}))
-        .sort(function(a,b) {
+        ?.map((x: IPoint) => ({...x, dist: getDistanceBetweenPointsInMeters([x.point[0], x.point[1]], latLng)}))
+        ?.sort(function(a,b) {
             return a.dist - b.dist;
         });
+
+
+        if (!distPoints?.length) {
+            return null;
+        }
 
     const dist = getDistanceBetweenPointsInMeters([distPoints[0].point[0], distPoints[0].point[1]], latLng);
 

@@ -8,6 +8,7 @@ import {IAddPointReportRequest} from "../../types";
 import {LsKey} from "../../types/lsKeys.enum";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { getHumanDate } from '../../helpers/dateHelper';
 
 
 const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
@@ -53,7 +54,7 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                                 </ListItemAvatar>
                                 <ListItemText
                                     primary={points.find(p=>+p.id === +point.id_point)!.name}
-                                    secondary={point.created_at.toLocaleString() + ' (Ожидает выгрузки)' }
+                                    secondary={getHumanDate(new Date(point.created_at)) + ' (Ожидает выгрузки)' }
                                 />
                             </ListItemButton>
                         );
@@ -69,7 +70,7 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                                     <LocationOnIcon />
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={point.name} secondary={point.created_at.toLocaleString()} />
+                            <ListItemText primary={point.name} secondary={getHumanDate(point.created_at)} />
                         </ListItemButton>
                     );
                 })}

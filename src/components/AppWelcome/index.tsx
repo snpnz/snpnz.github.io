@@ -14,6 +14,7 @@ import {addCachedPointReportAction, getRemotePointReportsAction, getRemotePoints
 import {Link} from "react-router-dom";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import WidgetCurrent from "../WidgetCurrent";
+import { getHumanDate } from '../../helpers/dateHelper';
 
 
 const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
@@ -71,7 +72,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     </ListItemIcon>
                     <ListItemText
                         primary="Список точек маршрута"
-                        secondary={updatesDates?.points ? updatesDates?.points.toLocaleString() : 'Нет данных'}
+                        secondary={updatesDates?.points ? getHumanDate(new Date(updatesDates?.points)) : 'Нет данных'}
                     />
                 </ListItem>
                 <ListItem
@@ -88,7 +89,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     </ListItemIcon>
                     <ListItemText
                         primary="Список отметок на точках"
-                        secondary={updatesDates?.pointsReports ? updatesDates?.pointsReports.toLocaleString() : 'Нет данных'}
+                        secondary={updatesDates?.pointsReports ? getHumanDate(updatesDates?.pointsReports) : 'Нет данных'}
                     />
                 </ListItem>
 

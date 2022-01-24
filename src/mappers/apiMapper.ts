@@ -18,8 +18,8 @@ export const mapBackPointReportToFront = (backModel: {[key: string]: string}): I
     return {
         comment: backModel.comment,
         coordinates: backModel.coordinates.split(',').map(Number),
-        created_at: new Date(Date.parse(backModel.created_at)).toLocaleString(),
-        upload_at: new Date(Date.parse(backModel.upload_at)).toLocaleString(),
+        created_at: new Date(backModel.created_at),
+        upload_at: new Date(backModel.upload_at),
         id: +backModel.id,
         id_point: +backModel.id_point,
         id_user: +backModel.id_user,

@@ -22,3 +22,25 @@ export function getInputDate(jsDate: Date) {
         .toISOString()
         .substr(0, 16);
 }
+
+const months = ['янв','фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+
+/**
+ * Возвращает человекочитаемую дату
+ * @param {Date} jsDate
+ * @returns {string}
+ */
+ export function getHumanDate(jsDate: Date) {
+    const d = new Date();
+    const lDade = jsDate.toLocaleDateString();
+    const lTime = jsDate.toLocaleTimeString().substring(0, 5);
+    if (d.toLocaleDateString() === lDade) {
+        return lTime;
+    }
+
+    if (d.getFullYear() === jsDate.getFullYear()) {
+        return `${jsDate.getDate()}\u2009${months[jsDate.getMonth()]}\u2009в\u2009${lTime}`;
+    }
+
+    return jsDate.toLocaleDateString();
+}
