@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Routes, Link, useLocation} from "react-router-dom";
+import {Route, Routes, Link, useLocation, useNavigate } from "react-router-dom";
 import AppWelcome from "../AppWelcome";
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
@@ -37,10 +37,19 @@ function App() {
     const { themeMode, isOnline, isUploadComplete, user, isUploadLoading } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         const loc = location.pathname;
         setShowScanBtn( !['/scan', '/add'].includes(loc));
+
+        const params = new URLSearchParams(document.location.search.substring(1));
+        const code = params.get("code");
+        if (code && code.length) {
+            window.navigator.vibrate(300);
+            navigate('/add?code=' + code);
+        }
+
     }, [location]);
 
     const theme = React.useMemo(
