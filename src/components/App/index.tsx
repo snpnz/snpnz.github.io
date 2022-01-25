@@ -45,7 +45,7 @@ function App() {
 
         const params = new URLSearchParams(document.location.search.substring(1));
         const code = params.get("code");
-        if (code && code.length) {
+        if (code && code.length && loc !== '/add') {
             window.navigator.vibrate(300);
             navigate('/add?code=' + code);
         }
