@@ -50,7 +50,7 @@ function App() {
             navigate('/add?code=' + code);
         }
 
-    }, [location]);
+    }, [location, navigate]);
 
     const theme = React.useMemo(
         () =>
