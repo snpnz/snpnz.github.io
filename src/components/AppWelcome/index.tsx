@@ -89,7 +89,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     </ListItemIcon>
                     <ListItemText
                         primary="Список отметок на точках"
-                        secondary={updatesDates?.pointsReports ? getHumanDate(updatesDates?.pointsReports) : 'Нет данных'}
+                        secondary={updatesDates?.pointsReports ? getHumanDate(new Date(updatesDates?.pointsReports)) : 'Нет данных'}
                     />
                 </ListItem>
 
