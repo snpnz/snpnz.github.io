@@ -6,4 +6,5 @@ export enum LsKey {
     UserData = 'snpzn-user',
     LocalUpdatesHistory = 'loc-up-hist',
     Theme = 'snpzn-theme',
+    RefereeCamera = 'snpnz-referee-camera',
 }

@@ -21,6 +21,7 @@ import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
 import {Avatar, Button, Typography} from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import SportsIcon from '@mui/icons-material/Sports';
 
 import MapIcon from '@mui/icons-material/Map';
 import {lsRemove} from "../../../../helpers/localStorageHelper";
@@ -66,13 +67,14 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                         {
                             !user
                             ? <Typography variant={"subtitle2"} color="warning">Неавторизованный пользователь</Typography>
-                            : <Typography variant={"subtitle2"} color="primary">{user.name} {user.surname}</Typography>
+                            : <Typography variant={"subtitle1"} color="primary">{user.name} {user.surname}</Typography>
                         }
                         {!user && <Button sx={{ml:-1}} component={Link} to="/login" color="inherit">Войти</Button>}
                         {user && <Button sx={{ml:-1}} onClick={() => {
                             Object.values(LsKey).forEach(lsRemove)
                             window.location.reload();
                         }} color="inherit">Выйти</Button>}
+                
                     </Box>
                 </Box>
                 <Divider />
@@ -135,6 +137,14 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                             </ListItemIcon>
                             <ListItemText primary="О приложении" />
                         </ListItem>
+                        {user?.isReferee && (
+                            <ListItem button component={Link} to={"/referee"}>
+                                <ListItemIcon>
+                                    <SportsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Referee" />
+                            </ListItem>
+                        )}
                 </List>
             </Box>
         </SwipeableDrawer>

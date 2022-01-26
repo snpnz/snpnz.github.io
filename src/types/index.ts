@@ -59,6 +59,7 @@ export interface IUser {
     photo: string;
     stravaId: string;
     registerDate: string;
+    isReferee: boolean;
 }
 
 export interface ILocalUpdatesHistory {

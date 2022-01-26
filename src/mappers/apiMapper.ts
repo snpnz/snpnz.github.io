@@ -45,6 +45,7 @@ export const mapBackUserToFront = (backModel: {[key: string]: string}): IUser =>
         surname: backModel.surname,
         photo: backModel.photo,
         stravaId: backModel.strava_id,
-        registerDate: new Date(Date.parse(backModel.register_date)).toLocaleDateString()
+        registerDate: new Date(Date.parse(backModel.register_date)).toLocaleDateString(),
+        isReferee: !!backModel.is_referee,
     }
 }

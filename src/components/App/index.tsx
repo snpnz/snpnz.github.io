@@ -28,6 +28,7 @@ import AppLogin from "../AppLogin";
 import AppMap from "../AppMap";
 import AppAll from "../AppAll";
 import AppAbout from "../AppAbout";
+import AppReferee from "../AppReferee";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -41,7 +42,7 @@ function App() {
 
     React.useEffect(() => {
         const loc = location.pathname;
-        setShowScanBtn( !['/scan', '/add'].includes(loc));
+        setShowScanBtn( !['/scan', '/add', '/referee'].includes(loc));
 
         const params = new URLSearchParams(document.location.search.substring(1));
         const code = params.get("code");
@@ -140,6 +141,7 @@ function App() {
                                 <Route path="map" element={<AppMap />} />
                                 <Route path="all" element={<AppAll />} />
                                 <Route path="about" element={<AppAbout />} />
+                                <Route path="referee" element={<AppReferee />} />
                             </Routes>
                         </Container>
                     </Box>
