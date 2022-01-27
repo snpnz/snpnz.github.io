@@ -1,4 +1,4 @@
-import React, {HTMLAttributes} from 'react';
+import React, {FormEvent, HTMLAttributes} from 'react';
 import {Box, TextField, Typography, Modal, Button} from '@mui/material';
 import QrReader from "react-qr-reader";
 import CameraRearIcon from '@mui/icons-material/CameraRear';
@@ -44,7 +44,7 @@ const AppReferee: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         if (data !== val) {
             data && onChange(data.replace('https://sn58.tk/?invite=',''));
             setVal(data);
-            handleClose();
+            
         }
     }
 
@@ -63,6 +63,12 @@ const AppReferee: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         setFio(event.target.value);
     }
 
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        alert(`${val}\n${fio}\n${comment}`);
+        handleClose();
+    }
+
     return <section>
         <Typography variant="h6" component="h4" gutterBottom sx={{p: 1, mt: 2}}  onDoubleClick={() => onChange('CECUt8XuFLHqLDJt')}>
             referee mode
@@ -74,11 +80,22 @@ const AppReferee: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" color="primary" gutterBottom component="h2" sx={{display:'flex', justifyContent:'space-between'}}>
-          Наведите камеру на QR-код <Button onClick={handleChangeMode}>
-            {mode === 'user' ? <CameraFrontIcon /> : <CameraRearIcon />}
-            </Button>
+        <Box sx={modalStyle} onClick={(e) => e.stopPropagation()}>
+          
+          {!val && <>
+            <Typography
+                id="modal-modal-title"
+                variant="h6"
+                color="primary"
+                gutterBottom
+                component="h2"
+                sx={{display:'flex', justifyContent:'space-between'}}
+                onDoubleClick={() => handleScan('ololo')}
+            >
+                Наведите камеру на QR-код
+                <Button onClick={handleChangeMode}>
+                    {mode === 'user' ? <CameraFrontIcon /> : <CameraRearIcon />}
+                </Button>
           </Typography>
           <QrReader
             delay={600}
@@ -86,26 +103,28 @@ const AppReferee: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             onScan={handleScan}
             style={{ width: '100%', height: '100%' }}
             facingMode={mode}
-        />
-        <Box sx={{mt:2}}>
-        <TextField
+        /></>}
+        {val && <Box sx={{mt:2}} component='form' onSubmit={handleSubmit}>
+            <TextField
                 label="ФИО (обязательно)"
                 value={fio}
                 onChange={onFioChange}
                 sx={{ mt: 2 }}
                 fullWidth
                 autoFocus
+                required
             />
-                    <TextField
+            <TextField
                 label="Коммент (не обязательно)"
                 multiline
                 maxRows={4}
                 value={comment}
                 onChange={onCommentChange}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, mb: 3 }}
                 fullWidth
             />
-        </Box>
+            <Button size='large' color='primary' fullWidth type='submit' variant='outlined'>Сохранить</Button>
+        </Box>}
         </Box>
       </Modal>
     </section>
