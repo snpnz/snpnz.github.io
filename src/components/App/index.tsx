@@ -135,7 +135,7 @@ function App() {
                                 <Route path="/" element={<AppWelcome />} />
                                 <Route path="scan" element={<AppScan />} />
                                 <Route path="add" element={<AppCheckpoint />} />
-                                <Route path="my" element={<AppMy />} />
+                                <Route path="my" element={<AppMy />} />s
                                 <Route path="list" element={<AppList />} />
                                 <Route path="login" element={<AppLogin />} />
                                 <Route path="map" element={<AppMap />} />

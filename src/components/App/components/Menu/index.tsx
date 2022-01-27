@@ -18,20 +18,39 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import {Link} from "react-router-dom";
 import QrCodeSharpIcon from '@mui/icons-material/QrCodeSharp';
 import AddLocationSharpIcon from '@mui/icons-material/AddLocationSharp';
-import {Avatar, Button, Typography} from '@mui/material';
+import {Avatar, Button, Typography, Modal} from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import SportsIcon from '@mui/icons-material/Sports';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import QRCode from "react-qr-code";
 
 import MapIcon from '@mui/icons-material/Map';
-import {lsRemove} from "../../../../helpers/localStorageHelper";
+import {lsGet, lsRemove} from "../../../../helpers/localStorageHelper";
 import {LsKey} from "../../../../types/lsKeys.enum";
-
+const modalStyle = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    color: 'inherit',
+    p: 4,
+  };
 
 const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className }) => {
     const [o, sO] = React.useState(false);
+    const [isQrOpen, setIsQrOpen] = React.useState(false);
     const dispatch = useAppDispatch();
     const { themeMode, user } = useAppSelector(s => s.main);
+    const handleQrClick = () => setIsQrOpen((c) => !c)
+    const handleQrClose = () => setIsQrOpen(false);
+
+    const userData: {token?: string} = lsGet<{token?: string} | null>(LsKey.AuthData) || { token: undefined };
+
     return <>
         <IconButton
             size="large"
@@ -43,6 +62,23 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
         >
             <MenuIcon />
         </IconButton>
+        <Modal
+            open={isQrOpen}
+            onClose={handleQrClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={modalStyle}>
+                <div style={{textAlign:'center'}}>
+                    <Typography id="modal-modal-title" variant="h6" color="primary" gutterBottom component="span">
+                        QR-код для отметки у судей
+                    </Typography>
+                    <br />
+                    <br />
+                    {userData?.token && <QRCode value={`https://sn58.tk/?invite=${userData?.token}`} />}
+                </div>
+            </Box>
+        </Modal>
         <SwipeableDrawer
             open={o}
             onClose={() => sO(false)}
@@ -66,14 +102,23 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                     <Box sx={{flexGrow: 1, ml: 2}}>
                         {
                             !user
-                            ? <Typography variant={"subtitle2"} color="warning">Неавторизованный пользователь</Typography>
-                            : <Typography variant={"subtitle1"} color="primary">{user.name} {user.surname}</Typography>
+                            ? <Typography variant={"subtitle2"} gutterBottom color="warning">Неавторизованный пользователь</Typography>
+                            : <Typography variant={"subtitle1"} gutterBottom color="primary">{user.name} {user.surname}</Typography>
                         }
-                        {!user && <Button sx={{ml:-1}} component={Link} to="/login" color="inherit">Войти</Button>}
-                        {user && <Button sx={{ml:-1}} onClick={() => {
-                            Object.values(LsKey).forEach(lsRemove)
-                            window.location.reload();
-                        }} color="inherit">Выйти</Button>}
+                    
+                        {!user && <Button size="small" variant='outlined' component={Link} to="/login" color="inherit">Войти</Button>}
+                        {user && <Box sx={{display:'flex', justifyContent:'space-between'}}>
+                            <Button  size="small" variant='outlined' onClick={() => {
+                                Object.values(LsKey).forEach(lsRemove)
+                                window.location.reload();
+                            }} color="inherit">
+                                Выйти
+                            </Button>
+                            {userData?.token && <Button  size="small" color="secondary" onClick={handleQrClick}>
+                                <QrCodeIcon/>
+                            </Button>}
+
+                        </Box>}
                 
                     </Box>
                 </Box>

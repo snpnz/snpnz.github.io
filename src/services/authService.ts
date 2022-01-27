@@ -3,10 +3,10 @@ const client_secret = 'ba9fb913d81fc6941fe0d6e96011de332fff2697';
 const lsTokenKey = 'snpnz_token';
 const lsUserKey = 'snpnz_user';
 
-export function getAuthLink() {
+export function getAuthLink(inviteCode?: string) {
     const data = {
         client_id,
-        redirect_uri: window.location.origin + '/oauth/?redir='+window.location.origin+'/login',
+        redirect_uri: `${window.location.origin}/oauth/?redir=${window.location.origin}/login${inviteCode ? `&invite=${inviteCode}` : ''}`,
         response_type: 'code',
         approval_prompt : 'auto',
         scope: 'activity:read',

@@ -22,6 +22,12 @@ const AppScan: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     const handleScan = (data: string | null) => {
         if (data !== val) {
+
+            if (data && /invite=/.test(data)) {
+                navigate('/login?invite=' + data);
+                return;
+            }
+
             data && onChange(data.replace('https://sn58.tk/?code=',''));
             setVal(data);
         }

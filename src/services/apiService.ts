@@ -23,6 +23,13 @@ export const getRemotePointsReportsForAll = async (): Promise<IPointReportAll[]>
     return data.map(mapBackPointReportToFrontForAll);
 }
 
+export const getRemotePointsReportsForPoint = async (idPoint: string): Promise<IPointReportAll[]> => {
+    const { data } = await get('/api/points_report/?all=1&id_point=' + idPoint);
+    if (data && !data.length) {
+        throw new Error('Список пуст');
+    }
+    return data.map(mapBackPointReportToFrontForAll);
+}
 
 export const addPointReport = async (request: IAddPointReportRequest): Promise<IPointReport[]> => {
     if (!navigator.onLine) {

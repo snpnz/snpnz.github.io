@@ -43,7 +43,7 @@ const months = ['янв','фев', 'мар', 'апр', 'май', 'июн', 'ию
             return `${jsDate.getDate()}\u2009${months[jsDate.getMonth()]}\u2009в\u2009${lTime}`;
         }
 
-        return jsDate.toLocaleDateString();
+        return jsDate.toLocaleDateString() + '\u2009' + jsDate.toLocaleTimeString().substring(0,5);
     } catch (e) {
         console.error(e);
     }
