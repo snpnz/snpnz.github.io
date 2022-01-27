@@ -111,7 +111,7 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     className: 'map-marker',
                     html: `<span title="${point.name}"></span>`,
                     iconSize: [8, 8],
-                    iconAnchor: [4, 4]
+                    iconAnchor: [0, 0]
                 });
                 L.marker([point.point[0], point.point[1]], {icon}).addTo(pointsLayer).bindPopup(point.name);
             })
