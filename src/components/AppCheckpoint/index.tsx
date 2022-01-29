@@ -14,6 +14,7 @@ import {IPoint} from "../../types";
 import {getSQLDate} from "../../helpers/dateHelper";
 import {getCurrentGeoLocationAsync} from "../../helpers/geoLocationHelper";
 import RadarIcon from '@mui/icons-material/Radar';
+import { notifyWithState } from '../../helpers/notificationHelper';
 
 
 const validation_distance = 500;
@@ -82,8 +83,10 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             created_at: getSQLDate(new Date())
         }))
 
+        notifyWithState('success', 'Готово!');
         window.navigator.vibrate(300);
         setTimeout(() => navigate('/my'), 1000);
+        
     }
 
     if (!points?.length) {

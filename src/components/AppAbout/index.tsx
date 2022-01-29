@@ -14,9 +14,9 @@ const AppAbout: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         <Typography variant="body2" component="p" sx={{p: 1}}>
             Общий чат для обсуждений в <Link href="https://t.me/+rpioYIdz1Z8xZWQy" target="_blank">telegram</Link>
         </Typography>
-        <Typography variant="body2" component="p" sx={{p: 1}}>
+        {/* <Typography variant="body2" component="p" sx={{p: 1}}>
             Связаться с автором в <Link href="https://t.me/xneek" target="_blank">telegram</Link>
-        </Typography>
+        </Typography> */}
         </Box>
     </section>
 }
