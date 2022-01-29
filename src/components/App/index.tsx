@@ -35,6 +35,7 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 function App() {
     const [showScanBtn, setShowScanBtn] = React.useState<boolean>(true);
+    const [fullScr, setFullScr] = React.useState<boolean>(true);
     const { themeMode, isOnline, isUploadComplete, user, isUploadLoading } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const location = useLocation();
@@ -43,6 +44,7 @@ function App() {
     React.useEffect(() => {
         const loc = location.pathname;
         setShowScanBtn( !['/scan', '/add', '/referee'].includes(loc));
+        setFullScr(['/map'].includes(loc));
 
         const params = new URLSearchParams(document.location.search.substring(1));
         const code = params.get("code");
@@ -130,12 +132,12 @@ function App() {
                         borderRadius: 0,
                         flexGrow: 1
                     }}>
-                        <Container>
+                        <Container disableGutters={fullScr} maxWidth={false}>
                             <Routes>
                                 <Route path="/" element={<AppWelcome />} />
                                 <Route path="scan" element={<AppScan />} />
                                 <Route path="add" element={<AppCheckpoint />} />
-                                <Route path="my" element={<AppMy />} />s
+                                <Route path="my" element={<AppMy />} />
                                 <Route path="list" element={<AppList />} />
                                 <Route path="login" element={<AppLogin />} />
                                 <Route path="map" element={<AppMap />} />

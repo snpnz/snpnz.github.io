@@ -28,7 +28,7 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
         const baseLayer = L.tileLayer
             .offline(osmTilesUrl, {
-                attribution: 'Map data {attribution.OpenStreetMap}',
+                attribution: mapBoxAttribution,
                 subdomains: 'abc',
                 minZoom: 8,
             })
@@ -147,7 +147,7 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     return <div
         ref={mapContainerRef}
-        style={{width: '100vw', height: 'calc(100vh - 64px)', position: 'absolute', left: 0, bottom: 0}}
+        style={{width: '100vw', height: 'calc(100vh - 64px)'}}
     />
 
 }
