@@ -5,7 +5,7 @@ import {getRemotePointsAction} from '../../store/main.slice';
 import {IPoint} from "../../types";
 
 
-const style = {
+const st = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
@@ -29,7 +29,7 @@ const PointsModal: React.FC<{ open: boolean, onClose: (point?: IPoint) => void}>
         open={open}
         onClose={() => onClose()}
       >
-          <Box sx={style}>
+          <Box sx={st}>
               <Alert
                 severity="error"
                 sx={{mt: 3}}
