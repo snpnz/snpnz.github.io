@@ -69,3 +69,49 @@ export interface ILocalUpdatesHistory {
 }
 
 export type ThemeMode = 'light' | 'dark';
+
+export interface IEvent {
+    id: number;
+    name: string;
+    description: string;
+    start: Date;
+    finish: Date;
+    createdAt: Date;
+    author: {
+        name: string,
+        surname: string;
+        photo: string;
+    }
+}
+
+export interface IEventPointReferee {
+    id: number;
+    name: string,
+    surname: string;
+    photo: string;
+}
+
+export interface IEventPoint {
+    id: number;
+    pointId: number;
+    name: string;
+    coordinates: [number, number],
+    idEventPointReferee: number | null,
+    referee?: IEventPointReferee
+}
+
+export interface IEventWithPoints extends IEvent {
+    points: IEventPoint[]
+}
+
+export interface IEventMember {
+    id: number;
+    eventId: number;
+    name: string;
+    surname: string;
+    createdAt: Date;
+    acceptedAt: Date;
+    token: string;
+    user?: IEventPointReferee;
+    author?: IEventPointReferee;
+}

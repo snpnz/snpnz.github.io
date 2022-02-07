@@ -1,6 +1,25 @@
-import {get, post} from "../helpers/httpClient";
-import {mapBackPointReportToFront, mapBackPointReportToFrontForAll, mapBackPointToFront, mapBackUserToFront} from "../mappers/apiMapper";
-import {IAddPointReportRequest, IPoint, IPointReport, IPointReportAll, IUser} from "../types";
+import {del, get, post} from "../helpers/httpClient";
+import {
+    mapBackEventMemberToFront,
+    mapBackEventsToFront,
+    mapBackEventWithPointsToFront,
+    mapBackPointReportToFront,
+    mapBackPointReportToFrontForAll,
+    mapBackPointToFront,
+    mapBackUsersToFront,
+    mapBackUserToFront
+} from "../mappers/apiMapper";
+import {
+    IAddPointReportRequest,
+    IEvent,
+    IEventWithPoints,
+    IPoint,
+    IPointReport,
+    IPointReportAll,
+    IUser,
+    IEventPointReferee,
+    IEventMember
+} from "../types";
 import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
 import { notifyWithState } from "../helpers/notificationHelper";
@@ -33,7 +52,8 @@ export const getRemotePointsReportsForPoint = async (idPoint: string): Promise<I
 }
 
 export const addPointReport = async (request: IAddPointReportRequest): Promise<IPointReport[]> => {
-    if (!navigator.onLine) {
+    const cond = true; //!navigator.onLine;
+    if (cond) {
         const already = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
         const a = [...already, request];
         lsSet<IAddPointReportRequest[]>(LsKey.SaveReport, a);
@@ -63,3 +83,110 @@ export const updateUserData = async (): Promise<IUser> => {
     return mapBackUserToFront(data);
 }
 
+
+export const getEvents = async (): Promise<IEvent[]> => {
+    const { data } = await get('/api/events/');
+    if (!data) {
+        throw new Error('Пожалуйста авторизуйтесь');
+    }
+    return (data.map(mapBackEventsToFront));
+}
+export const getEvent = async (id: number): Promise<IEventWithPoints> => {
+    const { data } = await get('/api/event/', { id: id.toString() });
+    if (!data) {
+        throw new Error('Пожалуйста авторизуйтесь');
+    }
+    return mapBackEventWithPointsToFront(data);
+}
+
+interface IAddEventPayload {
+    name: string;
+    description: string;
+    start_at: string;
+    finish_at: string;
+}
+export const addEvent = async (data: IAddEventPayload): Promise<{ id: number }> => {
+    const { id, error } = await post('/api/events/', data);
+    if (error) {
+        throw new Error(error);
+    }
+    return { id: +id };
+}
+
+interface IAddEventPointPayload {
+    id_event: number;
+    id_point: number;
+    sort_order: number;
+}
+export const addEventPoint = async (data: IAddEventPointPayload): Promise<{ id: number }> => {
+    const { id, error } = await post('/api/event_points/', data);
+    if (error) {
+        throw new Error(error);
+    }
+    return { id: +id };
+}
+
+export const deleteEventPoint = async (id: number): Promise<{ success: any }> => {
+    const { success, error } = await del('/api/event_points/', { id });
+    if (error) {
+        throw new Error(error);
+    }
+    return { success };
+}
+
+
+export const getUsers = async (): Promise<IEventPointReferee[]> => {
+    const { data, error } = await get('/api/users/');
+    if (error) {
+        throw new Error(error);
+    }
+    return data.map(mapBackUsersToFront);
+}
+
+interface IAddEventPointRefereePayload{
+    id_event_point: number;
+    id_user: number;
+}
+export const addEventPointReferee = async (data: IAddEventPointRefereePayload): Promise<{ id: number }> => {
+    const { id, error } = await post('/api/event_points_referees/', data);
+    if (error) {
+        throw new Error(error);
+    }
+    return { id: +id };
+}
+
+export const deleteEventPointReferee = async (id: number): Promise<{ success: any }> => {
+    const { success, error } = await del('/api/event_points_referees/', { id });
+    if (error) {
+        throw new Error(error);
+    }
+    return { success };
+}
+
+
+export const getEventMembers = async (id_event: number): Promise<IEventMember[]> => {
+    const { data, error } = await get('/api/event_members/', { id_event: id_event.toString() });
+    if (error) {
+        throw new Error(error);
+    }
+
+    if (!data) {
+        throw new Error('Пожалуйста авторизуйтесь');
+    }
+    return data.map(mapBackEventMemberToFront);
+}
+
+
+interface IAddEventMemberPayload{
+    id_event: number;
+    id_user?: number;
+    name: string;
+    surname: string;
+}
+export const addEventMember = async (data: IAddEventMemberPayload): Promise<{ id: number }> => {
+    const { id, error } = await post('/api/event_members/', data);
+    if (error) {
+        throw new Error(error);
+    }
+    return { id: +id };
+}

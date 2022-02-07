@@ -29,6 +29,9 @@ import AppMap from "../AppMap";
 import AppAll from "../AppAll";
 import AppAbout from "../AppAbout";
 import AppReferee from "../AppReferee";
+import AppEvents from "../AppEvents";
+import AppEvent from "../AppEvent";
+import AppEventAdd from "../AppEventAdd";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -144,6 +147,11 @@ function App() {
                                 <Route path="all" element={<AppAll />} />
                                 <Route path="about" element={<AppAbout />} />
                                 <Route path="referee" element={<AppReferee />} />
+                                <Route path="event/add/:id" element={<AppEventAdd />} />
+                                <Route path="event/add" element={<AppEventAdd />} />
+                    
+                                <Route path="event/:id" element={<AppEvent />} />
+                                <Route path="events" element={<AppEvents />} />
                             </Routes>
                         </Container>
                     </Box>

@@ -53,3 +53,13 @@ export function post<T>(url: string, data?: { [key: string]: string } | T, opts 
     // @ts-ignore
     return fetch(fullUrl, { ...options, ...opts, method: 'POST', body}).then(res => res.json());
 }
+
+export function del<T>(url: string, data?: { [key: string]: string } | T, opts = {}) {
+    const fullUrl = url;
+    let body;
+    if (data) {
+        body = JSON.stringify(data);
+    }
+    // @ts-ignore
+    return fetch(fullUrl, { ...options, ...opts, method: 'DELETE', body}).then(res => res.json());
+}
