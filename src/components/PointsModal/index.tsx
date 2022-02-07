@@ -23,40 +23,32 @@ const PointsModal: React.FC<{ open: boolean, onClose: (point?: IPoint) => void}>
 
     const { points, isPointsLoading, pointsLoadingError } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
-    
-    if (!points?.length) {
-        return <Modal
-        open={open}
-        onClose={() => onClose()}
-      >
-          <Box sx={st}>
-              <Alert
-                severity="error"
-                sx={{mt: 3}}
-                action={
-                    <Button color="inherit" onClick={() => dispatch(getRemotePointsAction())} size="small">
-                        Загрузить
-                    </Button>
-                }>
-                    Не загружены точки {isPointsLoading && "🛼"} {pointsLoadingError}
-                </Alert>
-        </Box>
-    </Modal>
-    }
+
 return <Modal
         open={open}
         onClose={() => onClose()}
     >
-        <Box sx={style}>
+        <Box sx={st}>
             <List>
-                {points.map((option) => {
+                {points?.length ? points.map((option) => {
                     return <ListItemButton key={option.id} onClick={() => onClose(option)}>
                     <ListItemText
                         primary={<Typography color="primary">{option.name}</Typography>}
                         secondary={option?.group?.name || ''}
                     />
                 </ListItemButton>
-                })}
+                }) : (
+                    <Alert
+                        severity="error"
+                        sx={{mt: 3}}
+                        action={
+                            <Button color="inherit" onClick={() => dispatch(getRemotePointsAction())} size="small">
+                                Загрузить
+                            </Button>
+                        }>
+                        Не загружены точки {isPointsLoading && "🛼"} {pointsLoadingError}
+                    </Alert>
+                )}
             </List>
         </Box>
     </Modal>;
