@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, List, ListItemText, Modal, Button, Box, ListItemButton, Typography } from '@mui/material';
+import {Alert, List, ListItemText, Modal, Button, Box, ListItemButton, Typography, SxProps, Theme} from '@mui/material';
 import {useAppDispatch, useAppSelector} from "../../store";
 import {getRemotePointsAction} from '../../store/main.slice';
 import {IPoint} from "../../types";
@@ -14,7 +14,7 @@ return <Modal
         open={open}
         onClose={() => onClose()}
     >
-        <Box sx={modalStyles}>
+        <Box sx={modalStyles as unknown as SxProps<Theme> }>
             <List>
                 {points?.length ? points.map((option) => {
                     return <ListItemButton key={option.id} onClick={() => onClose(option)}>
