@@ -3,21 +3,7 @@ import {Alert, List, ListItemText, Modal, Button, Box, ListItemButton, Typograph
 import {useAppDispatch, useAppSelector} from "../../store";
 import {getRemotePointsAction} from '../../store/main.slice';
 import {IPoint} from "../../types";
-
-
-const st = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: 400,
-    maxHeight: '80%',
-    overflowY: 'auto',
-    width: '80%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-  };
+import {modalStyles} from "../../commonStyles/modalStyles";
 
 const PointsModal: React.FC<{ open: boolean, onClose: (point?: IPoint) => void}> = ({ open, onClose }) => {
 
@@ -28,7 +14,7 @@ return <Modal
         open={open}
         onClose={() => onClose()}
     >
-        <Box sx={st}>
+        <Box sx={modalStyles}>
             <List>
                 {points?.length ? points.map((option) => {
                     return <ListItemButton key={option.id} onClick={() => onClose(option)}>
