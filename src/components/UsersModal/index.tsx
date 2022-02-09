@@ -3,16 +3,16 @@ import {List, ListItemText, Modal, Box, ListItemButton, Typography, CircularProg
 import {IEventPointReferee} from "../../types";
 import { getUsers } from '../../services/apiService';
 
-const modalStyles = {
+const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    overflowY: 'auto',
-    width: '80%',
+    width: 400,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
+    p: 4,
 };
 
 const UsersModal: React.FC<{ open: boolean, onClose: (user?: IEventPointReferee) => void}> = ({ open, onClose }) => {
@@ -43,7 +43,7 @@ return <Modal
         open={open}
         onClose={() => onClose()}
         >
-            <Box sx={modalStyles}>
+            <Box sx={style}>
                 {isLoading && <CircularProgress />}
                 {err.length && err}
                 {users.length > 0 && <List>

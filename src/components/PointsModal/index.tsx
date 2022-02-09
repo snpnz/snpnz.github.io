@@ -4,16 +4,16 @@ import {useAppDispatch, useAppSelector} from "../../store";
 import {getRemotePointsAction} from '../../store/main.slice';
 import {IPoint} from "../../types";
 
-const modalStyles = {
+const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    overflowY: 'auto',
-    width: '80%',
+    width: 400,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
+    p: 4,
 };
 
 const PointsModal: React.FC<{ open: boolean, onClose: (point?: IPoint) => void}> = ({ open, onClose }) => {
@@ -25,7 +25,7 @@ return <Modal
         open={open}
         onClose={() => onClose()}
     >
-        <Box sx={modalStyles} style={{position: 'absolute'}}>
+        <Box sx={style}>
             <List>
                 {points?.length ? points.map((option) => {
                     return <ListItemButton key={option.id} onClick={() => onClose(option)}>
