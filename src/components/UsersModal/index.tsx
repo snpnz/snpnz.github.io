@@ -2,7 +2,18 @@ import React from 'react';
 import {List, ListItemText, Modal, Box, ListItemButton, Typography, CircularProgress } from '@mui/material';
 import {IEventPointReferee} from "../../types";
 import { getUsers } from '../../services/apiService';
-import {modalStyles} from "../../commonStyles/modalStyles";
+
+const modalStyles = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    overflowY: 'auto',
+    width: '80%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+};
 
 const UsersModal: React.FC<{ open: boolean, onClose: (user?: IEventPointReferee) => void}> = ({ open, onClose }) => {
 const [users, setUsers] = React.useState<IEventPointReferee[]>([]);
