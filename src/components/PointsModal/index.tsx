@@ -14,7 +14,7 @@ return <Modal
         open={open}
         onClose={() => onClose()}
     >
-        <Box sx={modalStyles}>
+        <Box sx={modalStyles} style={{position: 'absolute'}}>
             <List>
                 {points?.length ? points.map((option) => {
                     return <ListItemButton key={option.id} onClick={() => onClose(option)}>
