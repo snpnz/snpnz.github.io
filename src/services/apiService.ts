@@ -71,7 +71,14 @@ export const addCachedPointReport = async (): Promise<IPointReport[]> => {
     }
     const tasks = already.map(por => post('/api/points_report/', por));
     const res = await Promise.all(tasks);
-    lsRemove(LsKey.SaveReport);
+    if (res.every((x) => x.success)) {
+        lsRemove(LsKey.SaveReport);
+        notifyWithState('success', 'Данные сохранены на сервере');
+    } else {
+        notifyWithState('error', 'Не удалось выгрузить данные. Авторизуйтесь');
+        throw new Error('Необходимо авторизоваться');
+    }
+
     return res;
 }
 

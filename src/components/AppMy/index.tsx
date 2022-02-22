@@ -29,14 +29,6 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         }>{pointReportsLoadingError}</Alert>
     }
 
-    if (!pointReports?.length) {
-        return <Alert severity="error" sx={{mt: 3}} action={
-            <Button color="inherit" onClick={() => dispatch(getRemotePointReportsAction())} size="small">
-                Загрузить
-            </Button>
-        }>Не загружены точки {pointReportsLoadingError}</Alert>
-    }
-
     return <section>
         <Typography variant="h6" component="h4" gutterBottom sx={{p: 1, mt: 2}}>
             Мои отметки на точках
@@ -61,7 +53,11 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     })}
                 </List>
             }
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            {!pointReports?.length ? <Alert severity="error" sx={{mt: 3}} action={
+                <Button color="inherit" onClick={() => dispatch(getRemotePointReportsAction())} size="small">
+                    Загрузить
+                </Button>
+            }>Не загружены точки {pointReportsLoadingError}</Alert> : <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {pointReports.map(point => {
                     return (
                         <ListItemButton key={point.id}>
@@ -74,7 +70,7 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         </ListItemButton>
                     );
                 })}
-            </List>
+            </List>}
         </Box>
     </section>
 }

@@ -4,11 +4,12 @@ import AppWelcome from "../AppWelcome";
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {AppBar, Toolbar, Typography, Container, Fab, CircularProgress} from "@mui/material";
+import {AppBar, Toolbar, Typography, Container, CircularProgress, Backdrop, SpeedDial, SpeedDialIcon, SpeedDialAction} from "@mui/material";
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 import Menu from "./components/Menu";
 import AppScan from "../AppScan";
@@ -38,6 +39,7 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 function App() {
     const [showScanBtn, setShowScanBtn] = React.useState<boolean>(true);
+    const [showActionsButton, setShowActionsButton] = React.useState<boolean>(false);
     const [fullScr, setFullScr] = React.useState<boolean>(true);
     const { themeMode, isOnline, isUploadComplete, user, isUploadLoading } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
@@ -155,15 +157,46 @@ function App() {
                             </Routes>
                         </Container>
                     </Box>
-                    {showScanBtn && <Fab component={Link} to="/scan" variant="extended" color="primary" aria-label="add"  sx={{
-                        position: 'fixed',
-                        bottom: (theme) => theme.spacing(2),
-                        right: (theme) => theme.spacing(2),
-                        zIndex: 999
-                    }}>
-                        <QrCodeScannerIcon sx={{ mr: 1 }} />
-                        Сканировать
-                    </Fab>}
+                    {/*{showScanBtn && <Fab component={Link} to="/scan" variant="extended" color="primary" aria-label="add"  >*/}
+                    {/*    <QrCodeScannerIcon sx={{ mr: 1 }} />*/}
+                    {/*    Сканировать*/}
+                    {/*</Fab>}*/}
+                    {showScanBtn && <>
+                        <Backdrop open={showActionsButton} />
+                        <SpeedDial
+                            ariaLabel="SpeedDial actions"
+                            icon={<SpeedDialIcon />}
+                            onClose={() => setShowActionsButton(false)}
+                            onOpen={() => setShowActionsButton(true)}
+                            open={showActionsButton}
+                            sx={{
+                                position: 'fixed',
+                                bottom: (theme) => theme.spacing(2),
+                                right: (theme) => theme.spacing(2),
+                                zIndex: 999
+                            }}
+                        >
+                            <SpeedDialAction
+                                icon={<QrCodeScannerIcon />}
+                                tooltipTitle={'Сканировать\u00a0QR\u2011код'}
+                                tooltipOpen
+                                onClick={() => {
+                                    setShowActionsButton(false);
+                                    navigate('/scan');
+                                }}
+                            />
+                            <SpeedDialAction
+                                icon={<AddLocationAltIcon />}
+                                tooltipTitle={'Добавить\u00a0вручную'}
+                                tooltipOpen
+                                onClick={() => {
+                                    setShowActionsButton(false);
+                                    navigate('/add');
+                                }}
+                            />
+                        </SpeedDial>
+                    </>}
+
                 </main>
              </ThemeProvider>
         </ColorModeContext.Provider>

@@ -183,7 +183,7 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                             </ListItemIcon>
                             <ListItemText primary="О приложении" />
                         </ListItem>
-                        {user?.isReferee && (
+                        {user?.isReferee === true && (
                             <ListItem button component={Link} to={"/referee"}>
                                 <ListItemIcon>
                                     <SportsIcon />
