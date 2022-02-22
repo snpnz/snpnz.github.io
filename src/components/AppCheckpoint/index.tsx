@@ -10,7 +10,7 @@ import {getDistanceBetweenPointsInMeters} from "../../helpers/distanceHelper";
 import {formatDistance} from "../../helpers/formatHelper";
 import {useAppDispatch, useAppSelector} from "../../store";
 import { getRemotePointsAction} from '../../store/main.slice';
-import {IAddFriendPointReportRequest, IPoint} from "../../types";
+import {IAddFriendPointReportRequest, IEventMember, IPoint} from "../../types";
 import {getSQLDate} from "../../helpers/dateHelper";
 import {getCurrentGeoLocationAsync} from "../../helpers/geoLocationHelper";
 import RadarIcon from '@mui/icons-material/Radar';
@@ -18,7 +18,6 @@ import { notifyWithState } from '../../helpers/notificationHelper';
 import {addFriendPointReport, addPointReport} from "../../services/apiService";
 import {lsGet} from "../../helpers/localStorageHelper";
 import {LsKey} from "../../types/lsKeys.enum";
-
 
 const validation_distance = 500;
 
@@ -95,9 +94,23 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         }
         const friendsRecords = lsGet<IAddFriendPointReportRequest[]>(LsKey.FriendReport) || [];
 
-        const fio = friendsRecords.find(f => f.invite === invite && /[А-Я][А-я-]+\s[А-Я][А-я-]+/.test(f.name))?.name;
+        let fio = friendsRecords.find(f => f.invite === invite && /[А-Я][А-я-]+\s[А-Я][А-я-]+/.test(f.name))?.name;
+        if (!fio?.length) {
+            const ff = lsGet<IEventMember[]>(LsKey.LastEventMembers)
+                ?.find(f => f.token === invite);
+            if (ff && (ff.surname || ff.name)) {
+                fio = [ff.surname, ff.name].join(' ');
+            }
+        }
         fio?.length && setFio(fio);
-        const team = friendsRecords.find(f => f.invite === invite && f.team?.length)?.team;
+        let team = friendsRecords.find(f => f.invite === invite && f.team?.length)?.team;
+        if (!team?.length) {
+            const ff = lsGet<IEventMember[]>(LsKey.LastEventMembers)
+                ?.find(f => f.token === invite);
+            if (ff) {
+                team = ff.team;
+            }
+        }
         team?.length && setTeam(team);
 
 

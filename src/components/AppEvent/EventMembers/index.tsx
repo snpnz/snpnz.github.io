@@ -79,9 +79,15 @@ const EventMembers: React.FC<{ id_event: number }> = ({ id_event }) => {
                         )}
                         <ListItemText
                             primary={<Typography component="span" color="primary">{
-                                member.user ? `${member.user.name} ${member.user.surname}` : `${member.name} ${member.surname}`
+                                (
+                                    member.user?.id ?
+                                        `${member.user.name || ''} ${member.user.surname || ''}`
+                                        : `${member.name || ''} ${member.surname || ''}`
+                                ) +  (member.team ? ` (${member.team })`: '')
                             }</Typography>}
-                            secondary={member.acceptedAt ? 'Принято ' + getHumanDate(member.acceptedAt) : 'Приглашен ' + getHumanDate(member.createdAt)}
+                            secondary={
+                            +member.acceptedAt > 0 ? 'Принято ' + getHumanDate(member.acceptedAt) : 'Приглашен ' + getHumanDate(member.createdAt)
+                        }
                         />
                     </ListItemButton>
                 );

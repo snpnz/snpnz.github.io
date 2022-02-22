@@ -41,7 +41,7 @@ const AppEvents: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                 {events.map(event => {
                     return (
                         <React.Fragment key={event.id}>
-                            <ListItemButton component={Link} to={`/list?id=${event.id}`}>
+                            <ListItemButton component={Link} to={`/event/${event.id}`}>
                                 <ListItemText primary={event.name} secondary={event.description} />
                             </ListItemButton>
                         </React.Fragment>

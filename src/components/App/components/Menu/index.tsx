@@ -23,6 +23,7 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import SportsIcon from '@mui/icons-material/Sports';
 import QrCodeIcon from '@mui/icons-material/QrCode';
+import EventIcon from '@mui/icons-material/Event';
 import QRCode from "react-qr-code";
 
 import MapIcon from '@mui/icons-material/Map';
@@ -142,6 +143,13 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                     </ListItemIcon>
                     <ListItemText primary={"Все точки"} />
                 </ListItem>
+                <ListItem button component={Link} to={"/events"}>
+                    <ListItemIcon>
+                        <EventIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"События"} />
+                </ListItem>
+
                 <Divider />
 
 

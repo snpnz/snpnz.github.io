@@ -6,5 +6,6 @@ export enum LsKey {
     AuthData = 'snpzn-auth',
     UserData = 'snpzn-user',
     LocalUpdatesHistory = 'loc-up-hist',
+    LastEventMembers = 'loc-last-event-embers',
     Theme = 'snpzn-theme',
 }

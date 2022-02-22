@@ -197,7 +197,11 @@ export const getEventMembers = async (id_event: number): Promise<IEventMember[]>
     if (!data) {
         throw new Error('Пожалуйста авторизуйтесь');
     }
-    return data.map(mapBackEventMemberToFront);
+    const lastEventMembers = data.map(mapBackEventMemberToFront);
+
+    lsSet<IEventMember[]>(LsKey.LastEventMembers, lastEventMembers);
+
+    return lastEventMembers;
 }
 
 

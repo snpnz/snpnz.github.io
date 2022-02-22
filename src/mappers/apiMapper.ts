@@ -139,6 +139,7 @@ export const mapBackEventMemberToFront = (backModel: {[key: string]: any}): IEve
             surname: backModel.usersurname,
             photo: backModel.userphoto,
         },
+        team: backModel.team,
         eventId: +backModel.id_event
     }
 }

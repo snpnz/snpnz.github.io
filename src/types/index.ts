@@ -118,6 +118,7 @@ export interface IEventMember {
     createdAt: Date;
     acceptedAt: Date;
     token: string;
+    team: string;
     user?: IEventPointReferee;
     author?: IEventPointReferee;
 }
