@@ -9,27 +9,50 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {getDistanceBetweenPointsInMeters} from "../../helpers/distanceHelper";
 import {formatDistance} from "../../helpers/formatHelper";
 import {useAppDispatch, useAppSelector} from "../../store";
-import {addPointReportAction, getRemotePointsAction} from '../../store/main.slice';
-import {IPoint} from "../../types";
+import { getRemotePointsAction} from '../../store/main.slice';
+import {IAddFriendPointReportRequest, IPoint} from "../../types";
 import {getSQLDate} from "../../helpers/dateHelper";
 import {getCurrentGeoLocationAsync} from "../../helpers/geoLocationHelper";
 import RadarIcon from '@mui/icons-material/Radar';
 import { notifyWithState } from '../../helpers/notificationHelper';
+import {addFriendPointReport, addPointReport} from "../../services/apiService";
+import {lsGet} from "../../helpers/localStorageHelper";
+import {LsKey} from "../../types/lsKeys.enum";
 
 
 const validation_distance = 500;
 
 const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const [comment, setComment] = React.useState<string>('');
+    const [fio, setFio] = React.useState<string>('');
+    const [team, setTeam] = React.useState<string>('');
     const [code, setCode] = React.useState<string|null>(null);
+    const [invite, setInvite] = React.useState<string|null>(null);
     const [lat, setLat] = React.useState<number | null>(null);
     const [lng, setLng] = React.useState<number | null>(null);
     const [gpsErr, setGpsErr] = React.useState<string | null>(null);
     const [point, setPoint] = React.useState<IPoint | null>(null);
+    const [availablePoints, setAvailablePoints] = React.useState<(IPoint & { dist?: number })[]>([]);
 
     const { points, isPointsLoading, pointsLoadingError, isPointReportSaving, pointReportError } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    React.useEffect(() => {
+        if (location.search) {
+            const searchParams = new URLSearchParams(location.search.substr(1));
+
+            if(searchParams.has("code")){
+                setCode(searchParams.get("code"));
+            }
+
+            if(searchParams.has("invite")){
+                setInvite(searchParams.get("invite"));
+            }
+        }
+
+    }, [location]);
 
     React.useEffect(() => {
         getLocation();
@@ -46,17 +69,40 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     }, [points, code]);
 
-    const location = useLocation();
-
     React.useEffect(() => {
-        if (location.search) {
-            const searchParams = new URLSearchParams(location.search.substr(1));
+        let distPoints = points;
+        if (lat && lng) {
+            const distPoints = points
+                .map((x: IPoint) => ({
+                    ...x,
+                    dist: getDistanceBetweenPointsInMeters([x.point[0], x.point[1]], [lat, lng])
+                }))
+                .sort(function(a,b) {
+                    return a.dist - b.dist;
+                });
 
-            if(searchParams.has("code")){
-                setCode(searchParams.get("code"));
+            if ((distPoints[0]?.dist || 10000) < validation_distance) {
+                setCode(distPoints[0]?.code);
             }
         }
-    }, [location]);
+
+        setAvailablePoints(distPoints);
+    }, [points, lat, lng])
+
+    React.useEffect(() => {
+        if (!invite) {
+            return;
+        }
+        const friendsRecords = lsGet<IAddFriendPointReportRequest[]>(LsKey.FriendReport) || [];
+
+        const fio = friendsRecords.find(f => f.invite === invite && /[А-Я][А-я-]+\s[А-Я][А-я-]+/.test(f.name))?.name;
+        fio?.length && setFio(fio);
+        const team = friendsRecords.find(f => f.invite === invite && f.team?.length)?.team;
+        team?.length && setTeam(team);
+
+
+    }, [invite]);
+
 
 
     const getLocation = async () => {
@@ -74,18 +120,39 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         setComment(event.target.value);
     }
 
-    const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+    const onFioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFio(event.target.value);
+    }
+    const onTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTeam(event.target.value);
+    }
+    const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
       event.preventDefault();
-        dispatch(addPointReportAction({
-            id_point: point!.id.toString(),
-            coordinates: [lat, lng].join(','),
-            comment,
-            created_at: getSQLDate(new Date())
-        }))
-
-        notifyWithState('success', 'Готово!');
-        window.navigator.vibrate(300);
-        setTimeout(() => navigate('/my'), 1000);
+        try {
+            if (invite) {
+                await addFriendPointReport({
+                    id_point: point!.id.toString(),
+                    coordinates: [lat, lng].join(','),
+                    comment,
+                    created_at: getSQLDate(new Date()),
+                    invite: invite,
+                    name: fio,
+                    team: team
+                })
+            } else {
+                await  addPointReport({
+                    id_point: point!.id.toString(),
+                    coordinates: [lat, lng].join(','),
+                    comment,
+                    created_at: getSQLDate(new Date())
+                })
+            }
+            notifyWithState('success', 'Готово!');
+            window.navigator.vibrate(300);
+            setTimeout(() => navigate('/my'), 100);
+        } catch (e) {
+            notifyWithState('error', (e as Error)?.message);
+        }
         
     }
 
@@ -103,11 +170,7 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             </Button>
         }>Ошибка получения геопозиции. {gpsErr}</Alert>
     }
-    const distPoints = points
-        .map((x: IPoint) => ({...x, dist: getDistanceBetweenPointsInMeters([x.point[0], x.point[1]], [lat, lng])}))
-        .sort(function(a,b) {
-            return a.dist - b.dist;
-        });
+
 
 
 
@@ -116,7 +179,7 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         return <Autocomplete
             sx={{ mt: 4 }}
             fullWidth
-            options={distPoints}
+            options={availablePoints}
             onChange={(e, v) => {
                 setCode(v?.code || '');
             }}
@@ -124,7 +187,10 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => {
                 return (<ListItem {...props}>
-                    <ListItemText primary={option.name + ` (${formatDistance(option.dist)})`} secondary={option?.group?.name || ''}/>
+                    <ListItemText
+                        primary={option.name + ` (${option.dist ? formatDistance(option.dist) : '-'})`}
+                        secondary={option?.group?.name || ''}
+                    />
                 </ListItem>);
             }}
             renderInput={(params) => (
@@ -185,6 +251,23 @@ const AppCheckpoint: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             </Card>
         </Box>
         <form onSubmit={handleSubmit}>
+            {invite && <>
+            <TextField
+                label="Фамилия и Имя (обязательно)"
+                value={fio}
+                onChange={onFioChange}
+                sx={{ mt: 2 }}
+                fullWidth
+                required
+            />
+            <TextField
+                label="Команда"
+                value={team}
+                onChange={onTeamChange}
+                sx={{ mt: 2 }}
+                fullWidth
+            />
+            </>}
             <TextField
                 label="Комментарий (не обязательно)"
                 multiline

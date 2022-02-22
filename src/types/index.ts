@@ -51,6 +51,12 @@ export interface IAddPointReportRequest {
     created_at: string;
 }
 
+export interface IAddFriendPointReportRequest extends IAddPointReportRequest {
+    invite: string;
+    name: string;
+    team?: string;
+}
+
 export interface IUser {
     id: number;
     login: string;

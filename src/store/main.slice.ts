@@ -1,6 +1,14 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IAddPointReportRequest, ILocalUpdatesHistory, IPoint, IPointReport, IUser, ThemeMode} from "../types";
-import {addPointReport, getRemotePoints, getRemotePointsReports, updateUserData, addCachedPointReport} from "../services/apiService";
+import {
+    IAddFriendPointReportRequest,
+    IAddPointReportRequest,
+    ILocalUpdatesHistory,
+    IPoint,
+    IPointReport,
+    IUser,
+    ThemeMode
+} from "../types";
+import { getRemotePoints, getRemotePointsReports, updateUserData, addCachedPointReport } from "../services/apiService";
 import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
 
@@ -35,7 +43,7 @@ function getSystemTheme(): ThemeMode {
 const  initialState: IMainState = {
     themeMode: lsGet<ThemeMode>(LsKey.Theme) || getSystemTheme(),
     isOnline: navigator.onLine,
-    isUploadComplete: !lsGet<IAddPointReportRequest[]>(LsKey.SaveReport),
+    isUploadComplete: !lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) && !lsGet<IAddFriendPointReportRequest[]>(LsKey.FriendReport),
     isUploadLoading: false,
     uploadError: '',
     points: lsGet<IPoint[]>(LsKey.Points) || [],
@@ -53,7 +61,6 @@ const  initialState: IMainState = {
 
 export const getRemotePointsAction = createAsyncThunk('sn58/getRemotePointsAction', getRemotePoints);
 export const getRemotePointReportsAction = createAsyncThunk('sn58/getRemotePointReportsAction', getRemotePointsReports);
-export const addPointReportAction = createAsyncThunk('sn58/addPointReportAction', addPointReport);
 export const addCachedPointReportAction = createAsyncThunk('sn58/addCachedPointReportAction', addCachedPointReport);
 export const updateUserDataAction = createAsyncThunk('sn58/updateUserDataAction', updateUserData);
 
@@ -116,19 +123,6 @@ const mainSlice = createSlice({
             state.isPointReportsLoading = false;
         })
 
-        builder.addCase(addPointReportAction.pending, (state, action) => {
-            state.isPointReportSaving = true;
-            state.isUploadComplete = false;
-        })
-        builder.addCase(addPointReportAction.rejected, (state, action) => {
-            state.pointsLoadingError = action.error.message || 'Ошибка загрузки информации о точках';
-            state.isPointReportSaving = false;
-        })
-        builder.addCase(addPointReportAction.fulfilled, (state, action) => {
-            lsRemove(LsKey.SaveReport);
-            state.isPointReportSaving = false;
-        })
-
         builder.addCase(addCachedPointReportAction.pending, (state, action) => {
             state.isUploadLoading = true;
         })
@@ -139,7 +133,6 @@ const mainSlice = createSlice({
             state.isUploadComplete = false;
         })
         builder.addCase(addCachedPointReportAction.fulfilled, (state, action) => {
-            lsRemove(LsKey.SaveReport);
             state.isUploadLoading = false;
             state.uploadError = '';
             state.isUploadComplete = true;

@@ -18,7 +18,7 @@ import {
     IPointReportAll,
     IUser,
     IEventPointReferee,
-    IEventMember
+    IEventMember, IAddFriendPointReportRequest
 } from "../types";
 import {lsGet, lsRemove, lsSet} from "../helpers/localStorageHelper";
 import {LsKey} from "../types/lsKeys.enum";
@@ -57,26 +57,43 @@ export const addPointReport = async (request: IAddPointReportRequest): Promise<I
         const already = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
         const a = [...already, request];
         lsSet<IAddPointReportRequest[]>(LsKey.SaveReport, a);
-        notifyWithState('warning', 'Сохранено без интернета (' + a.length + ')')
-        return Promise.reject('Интернет недоступен');
+        return Promise.resolve([]);
+        //return Promise.reject('Интернет недоступен');
     }
     const { data } = await post('/api/points_report/', request);
     return data.map(mapBackPointReportToFront);
 }
 
-export const addCachedPointReport = async (): Promise<IPointReport[]> => {
-    const already = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
-    if(!already?.length) {
-        throw new Error('No cached IAddPointReportRequest');
+
+
+export const addFriendPointReport = async (request: IAddFriendPointReportRequest): Promise<IAddFriendPointReportRequest[]> => {
+    const already = lsGet<IAddFriendPointReportRequest[]>(LsKey.FriendReport) || [];
+    const exist = already.find(p => p.invite === request.invite && p.id_point === request.id_point);
+    if (exist) {
+        throw new Error('Участник уже отмечен на точке');
     }
-    const tasks = already.map(por => post('/api/points_report/', por));
+
+    const a = [...already, request];
+    lsSet<IAddFriendPointReportRequest[]>(LsKey.FriendReport, a);
+    notifyWithState('success', 'Сохранено (' + a.length + ')')
+    return Promise.resolve(a);
+}
+export const addCachedPointReport = async (): Promise<IPointReport[]> => {
+    const friendsReports = lsGet<IAddFriendPointReportRequest[]>(LsKey.FriendReport) || [];
+    const userReports = lsGet<IAddPointReportRequest[]>(LsKey.SaveReport) || [];
+    if(!friendsReports?.length && !userReports?.length) {
+        throw new Error('No cached reports for save');
+    }
+    const tasks: Promise<any>[] = [];
+    userReports.forEach(por => tasks.push(post('/api/points_report/', por)));
+    friendsReports.forEach(por => tasks.push(post('/api/points_report/', por)));
     const res = await Promise.all(tasks);
     if (res.every((x) => x.success)) {
         lsRemove(LsKey.SaveReport);
+        lsRemove(LsKey.FriendReport);
         notifyWithState('success', 'Данные сохранены на сервере');
     } else {
-        notifyWithState('error', 'Не удалось выгрузить данные. Авторизуйтесь');
-        throw new Error('Необходимо авторизоваться');
+        throw new Error('Не удалось выгрузить данные. Авторизуйтесь');
     }
 
     return res;

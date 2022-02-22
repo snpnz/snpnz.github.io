@@ -24,7 +24,7 @@ const AppScan: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         if (data !== val) {
 
             if (data && /invite=/.test(data)) {
-                navigate('/login?invite=' + data);
+                navigate('/add?invite=' + data.replace('https://sn58.tk/registration/?invite=',''));
                 return;
             }
 
