@@ -20,6 +20,13 @@ import {LsKey} from "../../types/lsKeys.enum";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { getHumanDate } from '../../helpers/dateHelper';
+import {notifyWithState} from "../../helpers/notificationHelper";
+
+const copyToClipboard = (str: string) => {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+        return navigator.clipboard.writeText(str);
+    return Promise.reject('The Clipboard API is not available.');
+};
 
 
 const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
@@ -53,6 +60,11 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                 subheader={
                     <ListSubheader component="div" id="nested-list-subheader">
                         Товарищеские ожидающие выгрузки
+                        <button
+                            onClick={() => {
+                                copyToClipboard(JSON.stringify(friendsRecords))
+                                    .then(() => notifyWithState('success', 'Copied!'))
+                            }}>C</button>
                     </ListSubheader>
                 }
             >
