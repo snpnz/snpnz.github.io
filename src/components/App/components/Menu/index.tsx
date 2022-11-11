@@ -77,7 +77,7 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                     </Typography>
                     <br />
                     <br />
-                    {userData?.token && <QRCode value={`https://sn58.tk/?invite=${userData?.token}`} />}
+                    {userData?.token && <QRCode value={`https://sn.fednik.ru/?invite=${userData?.token}`} />}
                 </div>
             </Box>
         </Modal>
@@ -107,7 +107,7 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                             ? <Typography variant={"subtitle2"} gutterBottom color="warning">Неавторизованный пользователь</Typography>
                             : <Typography variant={"subtitle1"} gutterBottom color="primary">{user.name} {user.surname}</Typography>
                         }
-                    
+
                         {!user && <Button size="small" variant='outlined' component={Link} to="/login" color="inherit">Войти</Button>}
                         {user && <Box sx={{display:'flex', justifyContent:'space-between'}}>
                             <Button  size="small" variant='outlined' onClick={() => {
@@ -121,7 +121,7 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                             </Button>}
 
                         </Box>}
-                
+
                     </Box>
                 </Box>
                 <Divider />

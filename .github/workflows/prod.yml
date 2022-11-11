@@ -1,4 +1,4 @@
-name: sn58.tk frontend production
+name: sn.fednik.ru frontend production
 on:
   push:
     branches: [ main ]
@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -31,5 +31,5 @@ jobs:
         cd ./docs
         zip -r ../${{ env.ARTIFACT_NAME }} *
         cd ../
-    - run: curl -T ${{ env.ARTIFACT_NAME }} -u deploy@sn58.tk:${{ secrets.FTP_PSW }} ftp://deploy@sn58.tk/deploy/
-    - run: curl -i -X GET https://sn58.tk/unzip.php?name=${{ env.ARTIFACT_NAME }}
+    - run: curl -T ${{ env.ARTIFACT_NAME }} -u sn@fednik.ru:${{ secrets.FTP_PSW }} ftp://sn@fednik.ru/deploy/
+    - run: curl -i -X GET https://sn.fednik.ru/unzip.php?name=${{ env.ARTIFACT_NAME }}

@@ -24,11 +24,11 @@ const AppScan: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         if (data !== val) {
 
             if (data && /invite=/.test(data)) {
-                navigate('/add?invite=' + data.replace('https://sn58.tk/registration/?invite=',''));
+                navigate('/add?invite=' + data.replace('https://sn.fednik.ru/registration/?invite=',''));
                 return;
             }
 
-            data && onChange(data.replace('https://sn58.tk/?code=',''));
+            data && onChange(data.replace('https://sn.fednik.ru/?code=',''));
             setVal(data);
         }
     }
