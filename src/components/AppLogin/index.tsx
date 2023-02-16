@@ -64,7 +64,7 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     <CircularProgress />
                 </Box>}
             {!isAwaiting && userError && <Alert severity="warning" sx={{mt: 3, mb: 1}}>{userError}</Alert>}
-            <Button component={'a'} href={getAuthLink(invite)}>Войти через Strava</Button>
+            <Button component={'a'} href={getAuthLink(invite)}>Войти как походник</Button>
         </Paper>
     </section>
 }
