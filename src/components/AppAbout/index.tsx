@@ -22,9 +22,9 @@ const AppAbout: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             Связаться с автором в <Link href="https://t.me/xneek" target="_blank">telegram</Link>
         </Typography> */}
 
-            {dev < 10 && <Button color="inherit" onClick={() => setDev(c => c+1)} size="small">
+            {dev < 12 && <Button color="inherit" onClick={() => setDev(c => c+1)} size="small">
                 Служебная информация
-                {dev > 5 && <strong>{10 - dev}</strong>}
+                {dev > 5 && <strong> ({10 - dev})</strong>}
             </Button>}
 
             {dev > 10 && <pre>{JSON.stringify(store, null ,'  ')}</pre>}
