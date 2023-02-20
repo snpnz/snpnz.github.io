@@ -102,24 +102,24 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             notifyWithState('info', progress.toString());
         });
 
-        // if (points.length) {
-        //     const boundCoordinates: Array<[number,number]> = [];
-        //
-        //     points.forEach((point: IPoint) => {
-        //         boundCoordinates.push([point.point[0], point.point[1]]);
-        //         const icon = L.divIcon({
-        //             className: 'map-marker',
-        //             html: `<span title="${point.name}"></span>`,
-        //             iconSize: [8, 8],
-        //             iconAnchor: [0, 0]
-        //         });
-        //         L.marker([point.point[0], point.point[1]], {icon}).addTo(pointsLayer).bindPopup(point.name);
-        //     })
-        //     const bounds = L.latLngBounds(boundCoordinates);
-        //     if (bounds.isValid()) { map.fitBounds(bounds); } else {
-        //         notifyWithState('error', boundCoordinates.join(','))
-        //     }
-        // }
+        if (points.length) {
+            const boundCoordinates: Array<[number,number]> = [];
+
+            points.forEach((point: IPoint) => {
+                boundCoordinates.push([point.point[0], point.point[1]]);
+                const icon = L.divIcon({
+                    className: 'map-marker',
+                    html: `<span title="${point.name}"></span>`,
+                    iconSize: [8, 8],
+                    iconAnchor: [8, 8]
+                });
+                L.marker([point.point[0], point.point[1]], {icon}).addTo(pointsLayer).bindPopup(point.name);
+            })
+            const bounds = L.latLngBounds(boundCoordinates);
+            if (bounds.isValid()) { map.fitBounds(bounds); } else {
+                notifyWithState('error', boundCoordinates.join(','))
+            }
+        }
 
     }, [mapContainerRef, points])
 
