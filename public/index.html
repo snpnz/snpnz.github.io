@@ -28,7 +28,7 @@
         self.addEventListener("load", async () => {
           const container = navigator.serviceWorker;
           if (container.controller === null) {
-            const reg = await container.register("%PUBLIC_URL%/sw.js");
+            const reg = await container.register("%PUBLIC_URL%/sw.js", { scope: './' });
             reg.pushManager.getSubscription().then(function(sub) {
               if (sub === null) {
                 // Update UI to ask user to register for Push
