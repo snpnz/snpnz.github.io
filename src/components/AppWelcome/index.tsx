@@ -23,10 +23,9 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const updatesDates = lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {};
 
     return <Paper elevation={3} sx={{p: 4}}>
-            <Typography variant="h4" component="h1">
-                Здесь был<small>(a)</small>
-                &thinsp;
-                <strong>{user?.name || 'Вася'}!</strong>
+            <Typography variant="subtitle2" component="h1">
+                Привет
+                <strong>{user?.name ? `,\u2008${user?.name}😉` : '!'}</strong>
             </Typography>
             <Typography variant="subtitle1" component="h1" gutterBottom>
                 Состояние приложения
