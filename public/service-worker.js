@@ -2,23 +2,15 @@
 const cacheName = 'static-cache-v4';
 const precacheResources = [
     './',
-    "android-chrome-192x192.png",
-    "android-chrome-512x512.png",
-    "apple-touch-icon.png",
-    "appSettins.json",
-    "browserconfig.xml",
     "favicon.ico",
-    "favicon-16x16.png",
-    "favicon-32x32.png",
+    "logo192.png",
+    "logo512.png",
+    "appSettins.json",
+    "favicon.ico",
     "index.html",
     "manifest.json",
-    "mstile-150x150.png",
     "robots.txt",
-    "sw.js",
-    './manifest.json',
-    './stravastat.png',
-    './index.html',
-    './sw.js',
+    'stravastat.png',
 ];
 // When the service worker is installing, open the cache and add the precache resources to it
 self.addEventListener('install', (event) => {
@@ -38,6 +30,8 @@ self.addEventListener('fetch', (event) => {
                 return cachedResponse;
             }
             return fetch(event.request);
-        }),
+        }).catch(() =>
+            caches.match('/')
+        ),
     );
 });

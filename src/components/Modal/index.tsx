@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Modal: React.FC = ({ children }) => {
+const Modal: React.FC<{children: React.ReactNode}> = ({ children }) => {
     return <div style={{
         position: 'fixed',
         left: 0,

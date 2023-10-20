@@ -33,7 +33,7 @@ export const notify = (text: string, action?: React.ReactChildren | string) => {
 
 }
 
-export const notifyWithState = (state: 'error' | 'warning' | 'success' | 'info', text: React.ReactChildren | string, duration= 3000) => {
+export const notifyWithState = (state: 'error' | 'warning' | 'success' | 'info', text: React.ReactNode, duration= 3000) => {
     const container = document.createElement('aside');
     document.body.appendChild(container);
 
