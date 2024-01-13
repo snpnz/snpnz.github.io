@@ -4,3 +4,5 @@ export const mapBoxTilesUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{
 
 export const winterTilesUrl = 'https://tiles.opensnowmap.org/base_snow_map/{z}/{x}/{y}.png';
 export const winterPistesTilesUrl = 'https://tiles.opensnowmap.org/pistes/{z}/{x}/{y}.png';
+
+export const point739 = [53.13741, 45.32191];

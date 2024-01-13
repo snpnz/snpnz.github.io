@@ -8,6 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { getRemotePointsReportsForPoint } from '../../services/apiService';
 import { IPointReportAll } from '../../types';
 import { getHumanDate } from '../../helpers/dateHelper';
+import {Popup} from "react-leaflet";
 
 const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const [id, setId] = React.useState<string | undefined>();
@@ -94,7 +95,9 @@ const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             <Typography variant="subtitle1" component="h5" gutterBottom sx={{mb: 2}}>
                 {point.description}
             </Typography>
-
+            <Typography component="small" variant="body2" sx={{m: 0}}>
+                Координыты точки: <a href={`geo:${point.point}`}>{point.point.join(', ')}</a>
+            </Typography>
         </Box>
 
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -141,7 +144,7 @@ const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         lastGroup = point?.group?.name
                         sh = <ListSubheader>{lastGroup}</ListSubheader>;
                     }
-                    
+
                     return (
                         <React.Fragment key={point.id}>
                             {sh}

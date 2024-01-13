@@ -1,5 +1,5 @@
 import React, {HTMLAttributes} from 'react';
-import {Typography, Box, Link} from '@mui/material';
+import {Typography, Box, Link } from '@mui/material';
 import Button from "@mui/material/Button";
 import {useAppSelector} from "../../store";
 
@@ -12,6 +12,7 @@ const AppAbout: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             О приложении
         </Typography>
         <Box>
+            <img alt="logo" style={{width:64}} src="logo192.png" />
         <Typography variant="body2" component="p" sx={{p: 1}}>
             Придумано на расчистке Серебряной нити перед сезоном 2021-2022
         </Typography>

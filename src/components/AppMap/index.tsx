@@ -1,5 +1,5 @@
 import React, {HTMLAttributes} from 'react';
-import {Alert, Box, CircularProgress} from '@mui/material';
+import {Alert, Box, CircularProgress, Link, Typography} from '@mui/material';
 import {useAppDispatch, useAppSelector} from "../../store";
 import Button from "@mui/material/Button";
 import {getRemotePointsAction} from "../../store/main.slice";
@@ -13,115 +13,14 @@ import storageLayer from './storageLayer';
 import {notifyWithState} from "../../helpers/notificationHelper";
 import {mapBoxAttribution, mapBoxTilesUrl, osmTilesUrl, winterPistesTilesUrl} from "./const";
 import {IPoint} from "../../types";
+import {LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
+import {LocateControl} from "./LocateControl";
 
 const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
+    const mapStyle = { height: 'calc(100dvh - 64px)', width: '100%', padding: 0 };
+
     const { points, isPointsLoading, pointsLoadingError } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
-    const mapContainerRef = React.useRef(null);
-
-    React.useEffect(() => {
-        if (!mapContainerRef.current) {
-            return;
-        }
-        const map = new L.Map(mapContainerRef.current);
-        const pointsLayer = L.layerGroup().addTo(map);
-
-        const baseLayer = L.tileLayer
-            .offline(osmTilesUrl, {
-                attribution: mapBoxAttribution,
-                subdomains: 'abc',
-                minZoom: 8,
-            })
-            .addTo(map);
-
-        const mbLayer = L.tileLayer(
-            mapBoxTilesUrl,
-            {
-                id: 'mapbox/streets-v11',
-                tileSize: 512,
-                zoomOffset: -1,
-                attribution: mapBoxAttribution
-            }
-            );
-        const winterLayer = L.tileLayer(
-            winterPistesTilesUrl,
-            {
-                id: 'mapbox/winter-v11',
-                tileSize: 512,
-                zoomOffset: -1,
-                attribution: mapBoxAttribution
-            }
-        ).addTo(map);
-        const control = L.control.savetiles(baseLayer, {
-            confirm(layer: any, successCallback: any) {
-                // eslint-disable-next-line no-alert
-                if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
-                    successCallback();
-                }
-            },
-            confirmRemoval(layer: any, successCallback: any) {
-                // eslint-disable-next-line no-alert
-                if (window.confirm('Remove all the tiles?')) {
-                    successCallback();
-                }
-            },
-            saveText: 'SV',
-            rmText: 'RM',
-        });
-        control.addTo(map);
-
-        L.control.locate({
-            position: 'topright',
-            strings: {
-                title: "Show me where I am, yo!"
-            }
-        }).addTo(map);
-
-        const layerswitcher = L.control
-            .layers({
-                'OSM (offline)': baseLayer,
-                'MapBox': mbLayer,
-            }, {
-                winterLayer,
-                'points': pointsLayer
-            }, {
-                collapsed: false,
-                position: 'bottomleft'
-            })
-            .addTo(map);
-
-        storageLayer(baseLayer, layerswitcher);
-
-        let progress = 0;
-        baseLayer.on('savestart', (e: any) => {
-            progress = 0;
-            notifyWithState('info', 'Сохраняем ' + e._tilesforSave.length);
-        });
-        baseLayer.on('savetileend', () => {
-            progress += 1;
-            notifyWithState('info', progress.toString());
-        });
-
-        if (points.length) {
-            const boundCoordinates: Array<[number,number]> = [];
-
-            points.forEach((point: IPoint) => {
-                boundCoordinates.push([point.point[0], point.point[1]]);
-                const icon = L.divIcon({
-                    className: 'map-marker',
-                    html: `<span title="${point.name}"></span>`,
-                    iconSize: [8, 8],
-                    iconAnchor: [8, 8]
-                });
-                L.marker([point.point[0], point.point[1]], {icon}).addTo(pointsLayer).bindPopup(point.name);
-            })
-            const bounds = L.latLngBounds(boundCoordinates);
-            if (bounds.isValid()) { map.fitBounds(bounds); } else {
-                notifyWithState('error', boundCoordinates.join(','))
-            }
-        }
-
-    }, [mapContainerRef, points])
 
     if (isPointsLoading) {
         return <Box sx={{ display: 'flex', mt: 3 }}>
@@ -145,10 +44,53 @@ const AppMap: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         }>Не загружены точки {pointsLoadingError}</Alert>
     }
 
-    return <div
-        ref={mapContainerRef}
-        style={{width: '100vw', height: 'calc(100vh - 64px)'}}
-    />
+    return <MapContainer center={[53.13741, 45.32191]} zoom={13}  style={mapStyle} attributionControl={false}>
+        <TileLayer
+            attribution={mapBoxAttribution}
+            url={osmTilesUrl}
+        />
+        <LayersControl position="topright">
+            <LayersControl.BaseLayer name={"OSM"} checked>
+                <TileLayer
+                    attribution={mapBoxAttribution}
+                    url={osmTilesUrl}
+                />
+            </LayersControl.BaseLayer>
+            <LayersControl.Overlay name={"Наложение лыжной карты"} checked>
+                <TileLayer
+                    attribution={mapBoxAttribution}
+                    url={winterPistesTilesUrl}
+                />
+            </LayersControl.Overlay>
+
+            <LayersControl.Overlay name="Контрольные точки" checked>
+                <LayerGroup>{points.length > 0 && points.map((point) => {
+                    const icon = L.divIcon({
+                        className: 'map-marker',
+                        html: `<span title="${point.name}"></span>`,
+                        iconSize: [8, 8],
+                        iconAnchor: [8, 8]
+                    })
+                    return <Marker key={point.id} position={[point.point[0], point.point[1]]} icon={icon}>
+                        <Tooltip>{point.name}</Tooltip>
+                        <Popup>
+                            <Typography variant="subtitle1" sx={{m: 0}}>
+                                {point.name}
+                            </Typography>
+                            <Typography variant="body2" sx={{m: 0}}>
+                                {point.description}
+                            </Typography>
+                            <Typography variant="body2" sx={{m: 0}}>
+                                Координыты: <Link href={`geo:${point.point}`}>{point.point.join(', ')}</Link>
+                            </Typography>
+                        </Popup>
+                    </Marker>
+                })}
+                </LayerGroup>
+            </LayersControl.Overlay>
+        </LayersControl>
+        <LocateControl position="topright" />
+    </MapContainer>
 
 }
 
