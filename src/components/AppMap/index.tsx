@@ -9,10 +9,7 @@ import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
 // @ts-ignore
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import storageLayer from './storageLayer';
-import {notifyWithState} from "../../helpers/notificationHelper";
-import {mapBoxAttribution, mapBoxTilesUrl, osmTilesUrl, winterPistesTilesUrl} from "./const";
-import {IPoint} from "../../types";
+import {mapBoxAttribution, osmTilesUrl, winterPistesTilesUrl} from "./const";
 import {LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
 import {LocateControl} from "./LocateControl";
 
