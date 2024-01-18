@@ -8,7 +8,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { getRemotePointsReportsForPoint } from '../../services/apiService';
 import { IPointReportAll } from '../../types';
 import { getHumanDate } from '../../helpers/dateHelper';
-import {Popup} from "react-leaflet";
 
 const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const [id, setId] = React.useState<string | undefined>();
