@@ -53,7 +53,7 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             window.location.href = getAuthLink(invite)
         }, 1500)
         return () => clearTimeout(to);
-    }, [user, navigate]);
+    }, [user, navigate, invite]);
 
 
     return <section>
