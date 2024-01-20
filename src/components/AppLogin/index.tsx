@@ -49,6 +49,10 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         if (user) {
             navigate('/');
         }
+        const to: ReturnType<typeof setTimeout>= setTimeout(() => {
+            window.location.href = getAuthLink(invite)
+        }, 1500)
+        return () => clearTimeout(to);
     }, [user, navigate]);
 
 
@@ -64,7 +68,8 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     <CircularProgress />
                 </Box>}
             {!isAwaiting && userError && <Alert severity="warning" sx={{mt: 3, mb: 1}}>{userError}</Alert>}
-            <Button component={'a'} href={getAuthLink(invite)}>Войти как походник <img src="https://pohodnik.tk/favicon.ico" alt="poh" width="16" height="16" /></Button>
+            <Button
+                component={'a'} href={getAuthLink(invite)}>Войти как походник <img src="https://pohodnik.tk/favicon.ico" alt="poh" width="16" height="16" /></Button>
         </Paper>
     </section>
 }

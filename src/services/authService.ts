@@ -5,7 +5,7 @@ const lsUserKey = 'snpnz_user';
 export function getAuthLink(inviteCode?: string) {
     const data = {
         client_id,
-        redirect_uri: `${window.location.origin}/oauth/?redir=${window.location.origin}/login${inviteCode ? `&invite=${inviteCode}` : ''}`,
+        redirect_uri: `${window.location.origin}/oauth/index.php?redir=${window.location.origin}/login${inviteCode ? `&invite=${inviteCode}` : ''}`,
     };
 
     const searchParams = new URLSearchParams();
