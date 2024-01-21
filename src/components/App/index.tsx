@@ -122,7 +122,9 @@ function App() {
                             <Toolbar>
                                 <Menu />
                                 <Typography component={Link} to={'/'} color="inherit" variant="h6" sx={{ flexGrow: 1, textDecoration:'none' }}>
-                                    Sn58
+                                    <Typography variant="inherit" color="secondary" component="span">sn</Typography>
+                                    <Typography variant="inherit" component="span">pnz</Typography>
+
                                 </Typography>
                                 <IconButton sx={{ ml: 1 }} color="inherit" onClick={handleUploadClick}>
                                     {upIcon}
@@ -151,7 +153,7 @@ function App() {
                                 <Route path="referee" element={<AppReferee />} />
                                 <Route path="event/add/:id" element={<AppEventAdd />} />
                                 <Route path="event/add" element={<AppEventAdd />} />
-                    
+
                                 <Route path="event/:id" element={<AppEvent />} />
                                 <Route path="events" element={<AppEvents />} />
                             </Routes>

@@ -125,13 +125,13 @@ const Menu: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, className })
                     </Box>
                 </Box>
                 <Divider />
-                <ListItem button component={Link} to={"/my"}>
+                <ListItem button component={Link} to={"/my"} disabled={!user}>
                     <ListItemIcon>
                         <PlaylistAddCheckIcon />
                     </ListItemIcon>
                     <ListItemText primary={"Мои отметки"} />
                 </ListItem>
-                <ListItem button component={Link} to={"/all"}>
+                <ListItem button component={Link} to={"/all"} disabled={!user}>
                     <ListItemIcon>
                         <PeopleAltIcon />
                     </ListItemIcon>

@@ -1,5 +1,16 @@
 import React, {HTMLAttributes} from 'react';
-import {Alert, Box, List, ListItemButton, ListItemText, Typography, CircularProgress, ListItemAvatar, Avatar} from '@mui/material';
+import {
+    Alert,
+    Box,
+    List,
+    ListItemButton,
+    ListItemText,
+    Typography,
+    CircularProgress,
+    ListItemAvatar,
+    Avatar,
+    ListItem, Divider
+} from '@mui/material';
 import {useAppDispatch, useAppSelector} from "../../store";
 import Button from "@mui/material/Button";
 import {getRemotePointsAction} from "../../store/main.slice";
@@ -11,7 +22,7 @@ import { getHumanDate } from '../../helpers/dateHelper';
 
 const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const [id, setId] = React.useState<string | undefined>();
-    const { points, isPointsLoading, pointsLoadingError } = useAppSelector(s => s.main);
+    const { points, isPointsLoading, pointsLoadingError, user } = useAppSelector(s => s.main);
     const dispatch = useAppDispatch();
     const location = useLocation();
 
@@ -95,11 +106,11 @@ const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                 {point.description}
             </Typography>
             <Typography component="small" variant="body2" sx={{m: 0}}>
-                Координыты точки: <a href={`geo:${point.point}`}>{point.point.join(', ')}</a>
+                Координыты точки: <a href={`geo:${point.point}`}>{point.point.map(p => p.toFixed(5)).join(', ')}</a>
             </Typography>
         </Box>
-
-        <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <Divider />
+            {user && <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 <ListSubheader>Отметки на точке</ListSubheader>
                 {
                     (!!err || !reps) && <Alert severity="error">{err}</Alert>
@@ -126,7 +137,21 @@ const AppList: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         </ListItemButton>
                     );
                 })}
-            </List>
+            </List>}
+            {!user && <ListItem
+                secondaryAction={
+                    !user && (
+                        <Button component={Link} to={'/login'}>
+                            Войти
+                        </Button>
+                    )
+                }
+            >
+                <ListItemText
+                    primary="Список отметок на точках"
+                    secondary={'Будет доступен после авторизации'}
+                />
+            </ListItem>}
         </section>;
     }
 
