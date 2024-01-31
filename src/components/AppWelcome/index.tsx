@@ -22,7 +22,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const dispatch = useAppDispatch();
     const updatesDates = lsGet<ILocalUpdatesHistory>(LsKey.LocalUpdatesHistory) || {};
 
-    return <Paper elevation={3} sx={{p: 4}}>
+    return <Paper elevation={3} sx={{p: 4, m: 0}} >
             <Typography variant="subtitle2" component="h1">
                 Привет
                 <strong>{user?.name ? `,\u2008${user?.name}😉` : '!'}</strong>
@@ -37,7 +37,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     </ListItemIcon>
                     <ListItemText
                         primary="Доступ к интернету"
-                        secondary={isOnline ? 'Есть' : 'Без достпа к интеренету можно пользоваться, но нельзя выгрузить данные'}
+                        secondary={isOnline ? 'Есть' : 'Синхронизируем все при появлении'}
                     />
                 </ListItem>
                 <ListItem
@@ -53,8 +53,8 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         {user ? <CheckCircleIcon color="success" /> : <ErrorIcon color="error" />}
                     </ListItemIcon>
                     <ListItemText
-                        primary="Авторизация пользователя"
-                        secondary={user ? user.name + ' ' + user.surname : 'Функционал все равно будет доступен. Но для выгрузки надо авторизоваться'}
+                        primary="Авторизация"
+                        secondary={user ? user.name + ' ' + user.surname : 'Можно войти'}
                     />
                 </ListItem>
                 <ListItem
@@ -70,8 +70,8 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         {updatesDates?.points ? <CheckCircleIcon color="success" /> : <ErrorIcon color="error" />}
                     </ListItemIcon>
                     <ListItemText
-                        primary="Список точек маршрута"
-                        secondary={updatesDates?.points ? getHumanDate(new Date(updatesDates?.points)) : 'Нет данных'}
+                        primary="Список точек"
+                        secondary={updatesDates?.points ? `Обновлен ${getHumanDate(new Date(updatesDates?.points))}` : 'Нет данных'}
                     />
                 </ListItem>
                 <ListItem
@@ -87,7 +87,7 @@ const AppWelcome: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         {updatesDates?.pointsReports ? <CheckCircleIcon color="success" /> : <ErrorIcon color="warning" />}
                     </ListItemIcon>
                     <ListItemText
-                        primary="Список отметок на точках"
+                        primary="Список отметок"
                         secondary={updatesDates?.pointsReports ? getHumanDate(new Date(updatesDates?.pointsReports)) : 'Нет данных'}
                     />
                 </ListItem>

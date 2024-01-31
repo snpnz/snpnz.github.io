@@ -34,6 +34,11 @@ export const getRemotePointsReports = async (): Promise<IPointReport[]> => {
     return data.map(mapBackPointReportToFront);
 }
 
+export const getRemotePointsForUser = async (id_user: number): Promise<IPointReport[]> => {
+    const { data } = await get('/api/points_report/', { id_user: id_user.toString() });
+    return data.map(mapBackPointReportToFront);
+}
+
 
 export const getRemotePointsReportsForAll = async (): Promise<IPointReportAll[]> => {
     const { data } = await get('/api/points_report/?all=1');
@@ -121,6 +126,14 @@ export const getEvent = async (id: number): Promise<IEventWithPoints> => {
         throw new Error('Пожалуйста авторизуйтесь');
     }
     return mapBackEventWithPointsToFront(data);
+}
+
+export const getUser = async (id: number): Promise<IUser> => {
+    const { data } = await get('/api/user/', { id: id.toString() });
+    if (!data) {
+        throw new Error('Пожалуйста авторизуйтесь');
+    }
+    return mapBackUserToFront(data);
 }
 
 interface IAddEventPayload {

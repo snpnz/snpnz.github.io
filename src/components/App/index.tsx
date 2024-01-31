@@ -33,6 +33,7 @@ import AppReferee from "../AppReferee";
 import AppEvents from "../AppEvents";
 import AppEvent from "../AppEvent";
 import AppEventAdd from "../AppEventAdd";
+import AppUser from "../AppUser";
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -122,7 +123,7 @@ function App() {
                             <Toolbar>
                                 <Menu />
                                 <Typography component={Link} to={'/'} color="inherit" variant="h6" sx={{ flexGrow: 1, textDecoration:'none' }}>
-                                    <Typography variant="inherit" color="secondary" component="span">sn</Typography>
+                                    <Typography variant="inherit" color="accent" component="span">sn</Typography>
                                     <Typography variant="inherit" component="span">pnz</Typography>
 
                                 </Typography>
@@ -153,7 +154,7 @@ function App() {
                                 <Route path="referee" element={<AppReferee />} />
                                 <Route path="event/add/:id" element={<AppEventAdd />} />
                                 <Route path="event/add" element={<AppEventAdd />} />
-
+                                <Route path="user/:id" element={<AppUser />} />
                                 <Route path="event/:id" element={<AppEvent />} />
                                 <Route path="events" element={<AppEvents />} />
                             </Routes>

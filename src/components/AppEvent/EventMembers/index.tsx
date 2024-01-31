@@ -62,7 +62,7 @@ const EventMembers: React.FC<{ id_event: number }> = ({ id_event }) => {
         {<List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {data.map(member => {
                 return (
-                    <ListItemButton  component={Link} to={`/user?id=${member?.user?.id}`} key={member.id}>
+                    <ListItemButton  component={Link} to={`/user/${member?.user?.id}`} key={member.id}>
                         {member.user ? (
                             <ListItemAvatar>
                                 <Avatar
@@ -97,6 +97,7 @@ const EventMembers: React.FC<{ id_event: number }> = ({ id_event }) => {
         {user && !data?.find(x => x?.user?.id === user?.id) && (
             <Button
                 fullWidth
+                variant="contained"
                 size="large"
                 onClick={() => {
                 addEventMember({

@@ -112,7 +112,7 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                     })}
                 </List>
             }
-            {!pointReports?.length ? <Alert severity="error" sx={{mt: 3}} action={
+            {!pointReports?.length && pointReportsLoadingError ? <Alert severity="error" sx={{mt: 3}} action={
                 <Button color="inherit" onClick={() => dispatch(getRemotePointReportsAction())} size="small">
                     Загрузить
                 </Button>
@@ -132,11 +132,22 @@ const AppMy: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                                     <LocationOnIcon />
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={point.name} secondary={getHumanDate(point.created_at)} />
+                            <ListItemText primary={<>
+                                {point.name}
+                                <Typography variant="caption"  display="block" gutterBottom>
+                                    {getHumanDate(point.created_at)}
+                                </Typography>
+                            </>} secondary={<>
+                                                                <small>
+                                    <em>{point?.comment}</em>
+                                </small>
+                            </>} />
+
                         </ListItemButton>
                     );
                 })}
             </List>}
+            {!pointReports.length && !pointReportsLoadingError && <Typography color="secondary" sx={{p:6, m:6, textAlign: 'center'}}>Здесь будут отображаться ваши отметки на точках</Typography>}
         </Box>
     </section>
 }

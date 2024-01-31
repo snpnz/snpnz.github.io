@@ -8,12 +8,16 @@ import CardContent from "@mui/material/CardContent";
 import {getDistanceBetweenPointsInMeters} from "../../helpers/distanceHelper";
 import {getCurrentGeoLocationAsync} from "../../helpers/geoLocationHelper";
 import {formatDistance} from "../../helpers/formatHelper";
+import {useNavigate} from "react-router-dom";
+
 
 
 const WidgetCurrent: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     const { points } = useAppSelector(s => s.main);
     const [latLng, setLatLng] = React.useState<[number, number] | null>(null);
     const [gpsErr, setGpsErr] = React.useState<string | null>(null);
+
+    const navigate = useNavigate();
 
     const getLocation = async () => {
         try {
@@ -59,7 +63,7 @@ const WidgetCurrent: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                             </Typography>
                             <Typography variant="body2">
                                 <Link href={`geo:${distPoints[0].point.join(',')}`}>
-                                    {distPoints[0].point.map(x => x.toFixed(6)).join(', ')}
+                                    {distPoints[0].point.map(x => x.toFixed(5)).join(', ')}
                                 </Link>
                             </Typography>
                         </div>
@@ -69,6 +73,9 @@ const WidgetCurrent: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                         <Typography variant="body2">
                             {distPoints[0].description}
                         </Typography>
+                        {dist < 501 && <Button  variant="contained" sx={{ mt: 2 }} fullWidth  size="small" onClick={() => {
+                            navigate('/add');
+                        }}>Отметиться на точке</Button>}
                     </CardContent>
                 </Card>
             </Box>

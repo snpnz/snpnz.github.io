@@ -36,7 +36,7 @@ const months = ['янв','фев', 'мар', 'апр', 'май', 'июн', 'ию
         const lDade = jsDate.toLocaleDateString();
         const lTime = jsDate.toLocaleTimeString().substring(0, 5);
         if (d.toLocaleDateString() === lDade) {
-            return lTime;
+            return `сегодня ${lTime}`;
         }
 
         if (d.getFullYear() === jsDate.getFullYear()) {

@@ -62,14 +62,14 @@ const AppEvent: React.FC = () => {
     }
 
     return <section>
-        <Typography variant="h4" component="h4" gutterBottom sx={{p: 1, mt: 2}}>
+        <Typography variant="h4" component="h4" gutterBottom sx={{p: 1, mt: 2}} style={{ display: 'flex', justifyContent:'space-between' }}>
             {event.name}
+            <Typography variant="caption"  gutterBottom sx={{p: 1}}>
+                {getHumanDate(event.start)} - {getHumanDate(event.finish)}
+            </Typography>
         </Typography>
-        <Typography variant="subtitle1" component="h5" gutterBottom sx={{p: 1, mt: -2}}>
-            {event.name}
-        </Typography>
-        <Typography variant="h6" component="h4" gutterBottom sx={{p: 1}}>
-            {getHumanDate(event.start)} - {getHumanDate(event.finish)}
+        <Typography variant="body2" component="p" gutterBottom sx={{p: 1, mt: -2}}>
+            {event.description}
         </Typography>
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

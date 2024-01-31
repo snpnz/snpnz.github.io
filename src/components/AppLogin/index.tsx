@@ -20,7 +20,7 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
 
     React.useEffect(() => {
         if (location.search) {
-            const searchParams = new URLSearchParams(location.search.substr(1));
+            const searchParams = new URLSearchParams(location.search);
 
             if(searchParams.has("invite")){
                 setInvite(searchParams.get("invite") || undefined);
@@ -29,7 +29,7 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
     }, [location]);
 
     useEffect(() => {
-        const params = new URLSearchParams(document.location.search.substring(1));
+        const params = new URLSearchParams(location.search);
         const token = params.get("token");
         const id = params.get("id");
         const expiration = params.get("expiration");
@@ -37,12 +37,9 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
         if (token && id && expiration) {
             setIsAwaiting(true);
             lsSet(LsKey.AuthData, { token, id, expiration });
-            setTimeout(() => {
-                window.location.href ='/login';
-            }, 500);
+            dispatch(updateUserDataAction());
         }
 
-        dispatch(updateUserDataAction());
     }, [dispatch]);
 
     React.useEffect(() => {
@@ -50,7 +47,7 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             navigate('/');
         }
         const to: ReturnType<typeof setTimeout>= setTimeout(() => {
-            window.location.href = getAuthLink(invite)
+           window.location.href = getAuthLink(invite)
         }, 1500)
         return () => clearTimeout(to);
     }, [user, navigate, invite]);
@@ -69,7 +66,15 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
                 </Box>}
             {!isAwaiting && userError && <Alert severity="warning" sx={{mt: 3, mb: 1}}>{userError}</Alert>}
             <Button
-                component={'a'} href={getAuthLink(invite)}>Войти как походник <img src="https://pohodnik.tk/favicon.ico" alt="poh" width="16" height="16" /></Button>
+                variant="contained"
+                size="large"
+                component={'a'}
+                href={getAuthLink(invite)}
+                fullWidth
+                sx={{ mt: 3 }}
+            >
+                Войти &nbsp; <img src="https://pohodnik.tk/favicon.ico" alt="poh" width="16" height="16" />
+            </Button>
         </Paper>
     </section>
 }
