@@ -40,7 +40,7 @@ const AppLogin: React.FC<HTMLAttributes<HTMLDivElement>> = () => {
             dispatch(updateUserDataAction());
         }
 
-    }, [dispatch]);
+    }, [dispatch, location.search]);
 
     React.useEffect(() => {
         if (user) {
